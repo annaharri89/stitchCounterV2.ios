@@ -41,6 +41,8 @@
 		A1000032001 /* SheetDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000032000 /* SheetDestination.swift */; };
 		A1000033001 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000033000 /* AppCoordinator.swift */; };
 		A1000034001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1000034000 /* Assets.xcassets */; };
+		A1000035001 /* ThemeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000035000 /* ThemeScreen.swift */; };
+		A1000036001 /* ThemeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000036000 /* ThemeViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,6 +81,8 @@
 		A1000032000 /* SheetDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetDestination.swift; sourceTree = "<group>"; };
 		A1000033000 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		A1000034000 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A1000035000 /* ThemeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeScreen.swift; sourceTree = "<group>"; };
+		A1000036000 /* ThemeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +165,7 @@
 				A1000014000 /* LibraryViewModel.swift */,
 				A1000015000 /* ProjectDetailViewModel.swift */,
 				A1000016000 /* SettingsViewModel.swift */,
+				A1000036000 /* ThemeViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -200,6 +205,7 @@
 				A1000029000 /* LibraryScreen.swift */,
 				A1000030000 /* ProjectDetailScreen.swift */,
 				A1000031000 /* SettingsScreen.swift */,
+				A1000035000 /* ThemeScreen.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -323,6 +329,8 @@
 				A1000031001 /* SettingsScreen.swift in Sources */,
 				A1000032001 /* SheetDestination.swift in Sources */,
 				A1000033001 /* AppCoordinator.swift in Sources */,
+				A1000035001 /* ThemeScreen.swift in Sources */,
+				A1000036001 /* ThemeViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

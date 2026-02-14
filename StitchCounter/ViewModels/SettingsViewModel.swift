@@ -3,7 +3,6 @@ import Combine
 
 @MainActor
 final class SettingsViewModel: ObservableObject {
-    @Published var selectedTheme: AppTheme
     @Published var isExporting: Bool = false
     @Published var isImporting: Bool = false
     @Published var exportSuccess: Bool = false
@@ -13,18 +12,10 @@ final class SettingsViewModel: ObservableObject {
     @Published var importedCount: Int = 0
     @Published var failedCount: Int = 0
     
-    private let themeService: ThemeService
     private let projectService: ProjectService
     
-    init(themeService: ThemeService, projectService: ProjectService) {
-        self.themeService = themeService
+    init(projectService: ProjectService) {
         self.projectService = projectService
-        self.selectedTheme = themeService.currentTheme
-    }
-    
-    func onThemeSelected(_ theme: AppTheme) {
-        selectedTheme = theme
-        themeService.setTheme(theme)
     }
     
     func exportLibrary() async -> URL? {

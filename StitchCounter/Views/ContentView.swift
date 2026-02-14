@@ -6,6 +6,7 @@ struct ContentView: View {
     
     var body: some View {
         let themeColors = coordinator.themeService.colors(for: colorScheme)
+        let currentThemeStyle = coordinator.themeService.style
         
         TabView(selection: $coordinator.currentTab) {
             LibraryScreen(
@@ -17,6 +18,12 @@ struct ContentView: View {
             }
             .tag(TabItem.library)
             
+            ThemeScreen(viewModel: coordinator.themeViewModel)
+                .tabItem {
+                    Label(TabItem.theme.title, systemImage: TabItem.theme.icon)
+                }
+                .tag(TabItem.theme)
+            
             SettingsScreen(viewModel: coordinator.settingsViewModel)
                 .tabItem {
                     Label(TabItem.settings.title, systemImage: TabItem.settings.icon)
@@ -25,9 +32,11 @@ struct ContentView: View {
         }
         .tint(themeColors.primary)
         .themeColors(themeColors)
+        .themeStyle(currentThemeStyle)
         .sheet(item: $coordinator.showingSheet) { destination in
             sheetContent(for: destination)
                 .themeColors(themeColors)
+                .themeStyle(currentThemeStyle)
         }
         .environmentObject(coordinator)
     }

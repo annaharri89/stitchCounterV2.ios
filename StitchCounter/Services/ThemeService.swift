@@ -12,12 +12,21 @@ final class ThemeService: ObservableObject {
     private let themeStorageKey = "selected_theme"
     
     init() {
-        if let storedTheme = UserDefaults.standard.string(forKey: themeStorageKey),
-           let theme = AppTheme(rawValue: storedTheme) {
-            self.currentTheme = theme
+        if let storedTheme = UserDefaults.standard.string(forKey: themeStorageKey) {
+            self.currentTheme = Self.mapStoredValueToTheme(storedTheme)
         } else {
             self.currentTheme = .seaCottage
         }
+    }
+
+    private static func mapStoredValueToTheme(_ storedValue: String) -> AppTheme {
+        if let theme = AppTheme(rawValue: storedValue) {
+            return theme
+        }
+        if storedValue == "purple" {
+            return .dustyRose
+        }
+        return .seaCottage
     }
     
     func setTheme(_ theme: AppTheme) {
@@ -26,5 +35,9 @@ final class ThemeService: ObservableObject {
     
     func colors(for colorScheme: ColorScheme) -> ThemeColors {
         ThemeManager.colors(for: currentTheme, isDark: colorScheme == .dark)
+    }
+
+    var style: AppThemeStyle {
+        AppThemeStyle.style(for: currentTheme)
     }
 }

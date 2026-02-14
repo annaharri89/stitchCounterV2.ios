@@ -4,6 +4,8 @@ struct CounterDisplayView: View {
     let count: Int
     let isVertical: Bool
     
+    @Environment(\.themeStyle) private var style
+    
     init(count: Int, isVertical: Bool = false) {
         self.count = count
         self.isVertical = isVertical
@@ -23,10 +25,11 @@ struct CounterDisplayView: View {
             let fontSize = min(maxFontSize, max(minFontSize, calculatedSize))
             
             Text("\(count)")
-                .font(.system(size: fontSize, weight: .bold, design: .rounded))
+                .font(.system(size: fontSize, weight: .bold, design: style.counterFontDesign))
                 .minimumScaleFactor(0.3)
                 .lineLimit(1)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .accessibilityLabel("Count: \(count)")
         }
     }
 }

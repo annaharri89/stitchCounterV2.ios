@@ -7,7 +7,6 @@ private let bugReportEmail = "support@harrisonsoftware.dev"
 struct SettingsScreen: View {
     @ObservedObject var viewModel: SettingsViewModel
 
-    @State private var isThemeSectionExpanded = true
     @State private var isBackupSectionExpanded = true
     @State private var showImportPicker = false
     @State private var showExportShare = false
@@ -19,7 +18,6 @@ struct SettingsScreen: View {
     var body: some View {
         NavigationStack {
             List {
-                themeSection
                 backupSection
                 supportSection
             }
@@ -46,25 +44,6 @@ struct SettingsScreen: View {
                 if viewModel.failedCount > 0 {
                     Text("Failed to import \(viewModel.failedCount) project(s)")
                 }
-            }
-        }
-    }
-
-    // MARK: - Theme
-
-    private var themeSection: some View {
-        Section {
-            DisclosureGroup(isExpanded: $isThemeSectionExpanded) {
-                ForEach(AppTheme.allCases) { theme in
-                    ThemeOptionRow(
-                        theme: theme,
-                        isSelected: viewModel.selectedTheme == theme,
-                        onSelect: { viewModel.onThemeSelected(theme) }
-                    )
-                }
-            } label: {
-                Label("Theme Settings", systemImage: "paintpalette")
-                    .font(.headline)
             }
         }
     }
@@ -173,50 +152,6 @@ struct SettingsScreen: View {
     }
 }
 
-// MARK: - Theme Option Row
-
-struct ThemeOptionRow: View {
-    let theme: AppTheme
-    let isSelected: Bool
-    let onSelect: () -> Void
-
-    @Environment(\.themeColors) private var colors
-
-    var body: some View {
-        Button {
-            onSelect()
-        } label: {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(theme.displayName)
-                        .font(.body)
-                        .foregroundColor(colors.onSurface)
-
-                    if isSelected {
-                        themeColorPreviews
-                    }
-                }
-
-                Spacer()
-
-                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(isSelected ? colors.primary : colors.onSurface.opacity(0.4))
-            }
-            .padding(.vertical, 8)
-        }
-    }
-
-    private var themeColorPreviews: some View {
-        let previewColors = ThemeManager.colors(for: theme, isDark: false)
-        return HStack(spacing: 8) {
-            Circle().fill(previewColors.primary).frame(width: 20, height: 20)
-            Circle().fill(previewColors.secondary).frame(width: 20, height: 20)
-            Circle().fill(previewColors.tertiary).frame(width: 20, height: 20)
-            Circle().fill(previewColors.quaternary).frame(width: 20, height: 20)
-        }
-    }
-}
-
 // MARK: - Share Sheet
 
 struct ShareSheet: UIViewControllerRepresentable {
@@ -232,7 +167,6 @@ struct ShareSheet: UIViewControllerRepresentable {
 #Preview {
     SettingsScreen(
         viewModel: SettingsViewModel(
-            themeService: ThemeService(),
             projectService: ProjectService()
         )
     )

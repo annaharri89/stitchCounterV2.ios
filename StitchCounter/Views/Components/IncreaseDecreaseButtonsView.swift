@@ -5,9 +5,10 @@ struct IncreaseDecreaseButtonsView: View {
     let onDecrement: () -> Void
     let incrementFontSize: CGFloat
     let decrementFontSize: CGFloat
-    
+
     @Environment(\.themeColors) private var colors
-    
+    @Environment(\.themeStyle) private var style
+
     init(
         onIncrement: @escaping () -> Void,
         onDecrement: @escaping () -> Void,
@@ -19,30 +20,36 @@ struct IncreaseDecreaseButtonsView: View {
         self.incrementFontSize = incrementFontSize
         self.decrementFontSize = decrementFontSize
     }
-    
+
     var body: some View {
         HStack(spacing: 24) {
             Button {
+                style.performHaptic()
                 onDecrement()
             } label: {
-                Text("−")
-                    .font(.system(size: decrementFontSize, weight: .medium))
+                Text(style.decrementSymbol)
+                    .font(.system(size: decrementFontSize, weight: .medium, design: style.counterFontDesign))
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(colors.tertiary)
-                    .foregroundColor(colors.onTertiary)
-                    .cornerRadius(16)
+                    .themedButtonBackground(
+                        containerColor: colors.tertiary,
+                        contentColor: colors.onTertiary
+                    )
             }
-            
+            .accessibilityLabel("Decrease count")
+
             Button {
+                style.performHaptic()
                 onIncrement()
             } label: {
-                Text("+")
-                    .font(.system(size: incrementFontSize, weight: .medium))
+                Text(style.incrementSymbol)
+                    .font(.system(size: incrementFontSize, weight: .medium, design: style.counterFontDesign))
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(colors.primary)
-                    .foregroundColor(colors.onPrimary)
-                    .cornerRadius(16)
+                    .themedButtonBackground(
+                        containerColor: colors.primary,
+                        contentColor: colors.onPrimary
+                    )
             }
+            .accessibilityLabel("Increase count")
         }
     }
 }

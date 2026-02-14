@@ -3,14 +3,15 @@ import SwiftUI
 struct BottomActionButtonsView: View {
     let onResetAll: () -> Void
     let labelText: String
-    
+
     @Environment(\.themeColors) private var colors
-    
+    @Environment(\.themeStyle) private var style
+
     init(onResetAll: @escaping () -> Void, labelText: String = "Reset") {
         self.onResetAll = onResetAll
         self.labelText = labelText
     }
-    
+
     var body: some View {
         Button {
             onResetAll()
@@ -19,13 +20,16 @@ struct BottomActionButtonsView: View {
                 Image(systemName: "arrow.counterclockwise")
                 Text(labelText)
             }
-            .font(.headline)
+            .font(.system(.headline, design: style.headingFontDesign))
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
-            .background(colors.quaternary)
-            .foregroundColor(.white)
-            .cornerRadius(12)
+            .themedButtonBackground(
+                containerColor: colors.quaternary,
+                contentColor: .white
+            )
         }
+        .accessibilityLabel(labelText)
+        .accessibilityHint("Resets counters to zero")
     }
 }
 

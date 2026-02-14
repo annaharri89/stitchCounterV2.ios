@@ -109,11 +109,11 @@ struct ThemeManager {
     
     static let dustyRoseLightColors = ThemeColors(
         primary: Color(hex: "6650A4"),
-        secondary: Color(hex: "625B71"),
+        secondary: Color(hex: "7B6D3A"),
         tertiary: Color(hex: "7D5260"),
         quaternary: Color(hex: "4A2C3A"),
         primaryContainer: Color(hex: "E8DEF8"),
-        secondaryContainer: Color(hex: "E8E0F0"),
+        secondaryContainer: Color(hex: "F0EBD8"),
         tertiaryContainer: Color(hex: "FFE0E8"),
         onPrimary: .white,
         onSecondary: .white,
@@ -128,11 +128,11 @@ struct ThemeManager {
     
     static let dustyRoseDarkColors = ThemeColors(
         primary: Color(hex: "D0BCFF"),
-        secondary: Color(hex: "CCC2DC"),
+        secondary: Color(hex: "E0D0A0"),
         tertiary: Color(hex: "EFB8C8"),
         quaternary: Color(hex: "B88FA3"),
         primaryContainer: Color(hex: "4F378B"),
-        secondaryContainer: Color(hex: "4A3A5A"),
+        secondaryContainer: Color(hex: "5A4A2A"),
         tertiaryContainer: Color(hex: "432838"),
         onPrimary: .black,
         onSecondary: .black,

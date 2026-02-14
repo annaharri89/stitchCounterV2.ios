@@ -12,8 +12,12 @@ final class AppCoordinator: ObservableObject {
         LibraryViewModel(projectService: projectService)
     }()
     
+    lazy var themeViewModel: ThemeViewModel = {
+        ThemeViewModel(themeService: themeService)
+    }()
+
     lazy var settingsViewModel: SettingsViewModel = {
-        SettingsViewModel(themeService: themeService, projectService: projectService)
+        SettingsViewModel(projectService: projectService)
     }()
     
     init() {
@@ -62,11 +66,13 @@ final class AppCoordinator: ObservableObject {
 
 enum TabItem: String, CaseIterable {
     case library
+    case theme
     case settings
     
     var title: String {
         switch self {
         case .library: return "Library"
+        case .theme: return "Theme"
         case .settings: return "Settings"
         }
     }
@@ -74,6 +80,7 @@ enum TabItem: String, CaseIterable {
     var icon: String {
         switch self {
         case .library: return "list.bullet"
+        case .theme: return "paintpalette"
         case .settings: return "gearshape"
         }
     }
