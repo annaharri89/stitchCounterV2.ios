@@ -4,17 +4,24 @@ struct LibraryScreen: View {
     @ObservedObject var viewModel: LibraryViewModel
     @Binding var showingSheet: SheetDestination?
     
+    @State private var showNewProjectDialog = false
     @Environment(\.themeColors) private var colors
     
     var body: some View {
         NavigationStack {
-            Group {
-                if viewModel.isLoading {
-                    loadingState
-                } else if viewModel.projects.isEmpty {
-                    emptyState
-                } else {
-                    projectList
+            ZStack(alignment: .bottomTrailing) {
+                Group {
+                    if viewModel.isLoading {
+                        loadingState
+                    } else if viewModel.projects.isEmpty {
+                        emptyState
+                    } else {
+                        projectList
+                    }
+                }
+                
+                if !viewModel.isMultiSelectMode {
+                    newProjectFAB
                 }
             }
             .navigationTitle("Library")
@@ -32,9 +39,45 @@ struct LibraryScreen: View {
             onConfirm: { viewModel.confirmDelete() },
             onCancel: { viewModel.cancelDelete() }
         )
+        .sheet(isPresented: $showNewProjectDialog) {
+            NewProjectDialogView(
+                onSelectSingleCounter: {
+                    showNewProjectDialog = false
+                    showingSheet = .newProjectDetail(projectType: .single)
+                },
+                onSelectDoubleCounter: {
+                    showNewProjectDialog = false
+                    showingSheet = .newProjectDetail(projectType: .double)
+                },
+                onDismiss: {
+                    showNewProjectDialog = false
+                }
+            )
+            .presentationDetents([.height(240)])
+            .presentationDragIndicator(.visible)
+        }
         .onAppear {
             viewModel.refreshProjects()
         }
+    }
+    
+    private var newProjectFAB: some View {
+        Button {
+            showNewProjectDialog = true
+        } label: {
+            Image(systemName: "plus")
+                .font(.title2)
+                .fontWeight(.semibold)
+                .foregroundColor(colors.onPrimary)
+                .frame(width: 56, height: 56)
+                .background(colors.primary)
+                .clipShape(Circle())
+                .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
+        }
+        .padding(.trailing, 16)
+        .padding(.bottom, 16)
+        .accessibilityLabel("Create new project")
+        .accessibilityHint("Opens options to create a single or double counter project")
     }
     
     private var loadingState: some View {
@@ -245,6 +288,61 @@ struct ProjectRowView: View {
                 .background(colors.primaryContainer)
                 .cornerRadius(8)
                 .foregroundColor(colors.primary)
+        }
+    }
+}
+
+struct NewProjectDialogView: View {
+    let onSelectSingleCounter: () -> Void
+    let onSelectDoubleCounter: () -> Void
+    let onDismiss: () -> Void
+    
+    @Environment(\.themeColors) private var colors
+    
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("New Project")
+                .font(.headline)
+                .padding(.top, 24)
+            
+            VStack(spacing: 12) {
+                Button {
+                    onSelectSingleCounter()
+                } label: {
+                    HStack {
+                        Image(systemName: "number.circle")
+                        Text("New Single Counter")
+                    }
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(colors.primary)
+                    .foregroundColor(colors.onPrimary)
+                    .cornerRadius(12)
+                }
+                .accessibilityLabel("New Single Counter")
+                .accessibilityHint("Creates a new single counter project")
+                
+                Button {
+                    onSelectDoubleCounter()
+                } label: {
+                    HStack {
+                        Image(systemName: "number.circle.fill")
+                        Text("New Double Counter")
+                    }
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(colors.secondary)
+                    .foregroundColor(colors.onSecondary)
+                    .cornerRadius(12)
+                }
+                .accessibilityLabel("New Double Counter")
+                .accessibilityHint("Creates a new double counter project")
+            }
+            .padding(.horizontal, 24)
+            
+            Spacer()
         }
     }
 }

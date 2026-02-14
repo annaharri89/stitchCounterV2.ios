@@ -3,7 +3,7 @@ import Foundation
 enum AppTheme: String, CaseIterable, Identifiable, Codable {
     case seaCottage = "sea_cottage"
     case retroSummer = "retro_summer"
-    case purple = "purple"
+    case dustyRose = "dusty_rose"
     
     var id: String { rawValue }
     
@@ -11,7 +11,7 @@ enum AppTheme: String, CaseIterable, Identifiable, Codable {
         switch self {
         case .seaCottage: return "Sea Cottage"
         case .retroSummer: return "Retro Summer"
-        case .purple: return "Purple"
+        case .dustyRose: return "Dusty Rose"
         }
     }
 }

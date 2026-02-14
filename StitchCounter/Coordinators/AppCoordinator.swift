@@ -2,7 +2,7 @@ import SwiftUI
 
 @MainActor
 final class AppCoordinator: ObservableObject {
-    @Published var currentTab: TabItem = .home
+    @Published var currentTab: TabItem = .library
     @Published var showingSheet: SheetDestination?
     
     let projectService: ProjectService
@@ -61,13 +61,11 @@ final class AppCoordinator: ObservableObject {
 }
 
 enum TabItem: String, CaseIterable {
-    case home
     case library
     case settings
     
     var title: String {
         switch self {
-        case .home: return "Home"
         case .library: return "Library"
         case .settings: return "Settings"
         }
@@ -75,7 +73,6 @@ enum TabItem: String, CaseIterable {
     
     var icon: String {
         switch self {
-        case .home: return "house"
         case .library: return "list.bullet"
         case .settings: return "gearshape"
         }

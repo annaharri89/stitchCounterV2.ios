@@ -26,8 +26,8 @@ struct ThemeManager {
             return isDark ? seaCottageDarkColors : seaCottageLightColors
         case .retroSummer:
             return isDark ? retroSummerDarkColors : retroSummerLightColors
-        case .purple:
-            return isDark ? purpleDarkColors : purpleLightColors
+        case .dustyRose:
+            return isDark ? dustyRoseDarkColors : dustyRoseLightColors
         }
     }
     
@@ -43,7 +43,7 @@ struct ThemeManager {
         onSecondary: .white,
         onTertiary: .white,
         onTertiaryContainer: Color(hex: "2A1F4A"),
-        error: Color(hex: "D32F2F"),
+        error: Color(hex: "C05040"),
         onError: .white,
         surface: Color(UIColor.systemBackground),
         onSurface: Color(UIColor.label),
@@ -57,12 +57,12 @@ struct ThemeManager {
         quaternary: Color(hex: "4535C1"),
         primaryContainer: Color(hex: "6B7BC7"),
         secondaryContainer: Color(hex: "4A7B6B"),
-        tertiaryContainer: Color(hex: "3A2A6B"),
+        tertiaryContainer: Color(hex: "1E3350"),
         onPrimary: .black,
         onSecondary: .black,
         onTertiary: .white,
         onTertiaryContainer: Color(hex: "E8D6FF"),
-        error: Color(hex: "FF6B6B"),
+        error: Color(hex: "FF8A78"),
         onError: .white,
         surface: Color(UIColor.systemBackground),
         onSurface: Color(UIColor.label),
@@ -95,7 +95,7 @@ struct ThemeManager {
         quaternary: Color(hex: "E76F51"),
         primaryContainer: Color(hex: "C47A5A"),
         secondaryContainer: Color(hex: "9B7A4A"),
-        tertiaryContainer: Color(hex: "9B5A2A"),
+        tertiaryContainer: Color(hex: "7D4528"),
         onPrimary: .white,
         onSecondary: .black,
         onTertiary: .white,
@@ -107,7 +107,7 @@ struct ThemeManager {
         background: Color(UIColor.systemBackground)
     )
     
-    static let purpleLightColors = ThemeColors(
+    static let dustyRoseLightColors = ThemeColors(
         primary: Color(hex: "6650A4"),
         secondary: Color(hex: "625B71"),
         tertiary: Color(hex: "7D5260"),
@@ -126,14 +126,14 @@ struct ThemeManager {
         background: Color(UIColor.systemBackground)
     )
     
-    static let purpleDarkColors = ThemeColors(
+    static let dustyRoseDarkColors = ThemeColors(
         primary: Color(hex: "D0BCFF"),
         secondary: Color(hex: "CCC2DC"),
         tertiary: Color(hex: "EFB8C8"),
         quaternary: Color(hex: "B88FA3"),
         primaryContainer: Color(hex: "4F378B"),
         secondaryContainer: Color(hex: "4A3A5A"),
-        tertiaryContainer: Color(hex: "5A2A3A"),
+        tertiaryContainer: Color(hex: "432838"),
         onPrimary: .black,
         onSecondary: .black,
         onTertiary: .black,

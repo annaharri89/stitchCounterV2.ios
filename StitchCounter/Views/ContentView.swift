@@ -8,12 +8,6 @@ struct ContentView: View {
         let themeColors = coordinator.themeService.colors(for: colorScheme)
         
         TabView(selection: $coordinator.currentTab) {
-            HomeScreen(showingSheet: $coordinator.showingSheet)
-                .tabItem {
-                    Label(TabItem.home.title, systemImage: TabItem.home.icon)
-                }
-                .tag(TabItem.home)
-            
             LibraryScreen(
                 viewModel: coordinator.libraryViewModel,
                 showingSheet: $coordinator.showingSheet
