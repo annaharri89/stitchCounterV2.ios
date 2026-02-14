@@ -181,12 +181,15 @@ struct ThemeOptionRow: View {
     let onSelect: () -> Void
 
     @Environment(\.themeColors) private var colors
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         Button {
             onSelect()
         } label: {
-            HStack {
+            HStack(spacing: 12) {
+                ThemeIconPreview(theme: theme, isDark: colorScheme == .dark, isSelected: isSelected)
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text(theme.displayName)
                         .font(.body)
@@ -204,16 +207,55 @@ struct ThemeOptionRow: View {
             }
             .padding(.vertical, 8)
         }
+        .accessibilityLabel("\(theme.displayName) theme")
+        .accessibilityHint(isSelected ? "Currently selected" : "Double tap to select")
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
     private var themeColorPreviews: some View {
-        let previewColors = ThemeManager.colors(for: theme, isDark: false)
+        let previewColors = ThemeManager.colors(for: theme, isDark: colorScheme == .dark)
         return HStack(spacing: 8) {
             Circle().fill(previewColors.primary).frame(width: 20, height: 20)
             Circle().fill(previewColors.secondary).frame(width: 20, height: 20)
             Circle().fill(previewColors.tertiary).frame(width: 20, height: 20)
             Circle().fill(previewColors.quaternary).frame(width: 20, height: 20)
         }
+        .accessibilityHidden(true)
+    }
+}
+
+struct ThemeIconPreview: View {
+    let theme: AppTheme
+    let isDark: Bool
+    var isSelected: Bool = false
+
+    var body: some View {
+        let themeColors = ThemeManager.colors(for: theme, isDark: isDark)
+
+        ZStack {
+            RoundedRectangle(cornerRadius: 10)
+                .fill(themeColors.primaryContainer)
+
+            VStack(spacing: 3) {
+                HStack(spacing: 3) {
+                    Circle().fill(themeColors.primary).frame(width: 14, height: 14)
+                    Circle().fill(themeColors.secondary).frame(width: 14, height: 14)
+                }
+                HStack(spacing: 3) {
+                    Circle().fill(themeColors.tertiary).frame(width: 14, height: 14)
+                    Circle().fill(themeColors.quaternary).frame(width: 14, height: 14)
+                }
+            }
+        }
+        .frame(width: 44, height: 44)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .shadow(
+            color: isSelected ? Color.black.opacity(0.5) : Color.clear,
+            radius: isSelected ? 6 : 0,
+            x: 0,
+            y: 0
+        )
+        .accessibilityHidden(true)
     }
 }
 

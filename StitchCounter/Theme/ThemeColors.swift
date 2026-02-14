@@ -11,6 +11,8 @@ struct ThemeColors {
     let onPrimary: Color
     let onSecondary: Color
     let onTertiary: Color
+    let onPrimaryContainer: Color
+    let onSecondaryContainer: Color
     let onTertiaryContainer: Color
     let error: Color
     let onError: Color
@@ -42,6 +44,8 @@ struct ThemeManager {
         onPrimary: .white,
         onSecondary: .white,
         onTertiary: .white,
+        onPrimaryContainer: Color(hex: "1F8A9A"),
+        onSecondaryContainer: Color(hex: "3A9B8A"),
         onTertiaryContainer: Color(hex: "2A1F4A"),
         error: Color(hex: "C05040"),
         onError: .white,
@@ -51,17 +55,19 @@ struct ThemeManager {
     )
     
     static let seaCottageDarkColors = ThemeColors(
-        primary: Color(hex: "36C2CE"),
-        secondary: Color(hex: "77E4C8"),
-        tertiary: Color(hex: "478CCF"),
-        quaternary: Color(hex: "4535C1"),
-        primaryContainer: Color(hex: "6B7BC7"),
-        secondaryContainer: Color(hex: "4A7B6B"),
-        tertiaryContainer: Color(hex: "1E3350"),
+        primary: Color(hex: "2FA8B3"),
+        secondary: Color(hex: "5FBFA8"),
+        tertiary: Color(hex: "3F7FB3"),
+        quaternary: Color(hex: "3A2FA3"),
+        primaryContainer: Color(hex: "1F3A40"),
+        secondaryContainer: Color(hex: "213A35"),
+        tertiaryContainer: Color(hex: "1C2B3A"),
         onPrimary: .black,
         onSecondary: .black,
         onTertiary: .white,
-        onTertiaryContainer: Color(hex: "E8D6FF"),
+        onPrimaryContainer: Color(hex: "AEEAF0"),
+        onSecondaryContainer: Color(hex: "A6EDE0"),
+        onTertiaryContainer: Color(hex: "C7DCFF"),
         error: Color(hex: "FF8A78"),
         onError: .white,
         surface: Color(UIColor.systemBackground),
@@ -80,6 +86,8 @@ struct ThemeManager {
         onPrimary: .white,
         onSecondary: .white,
         onTertiary: .white,
+        onPrimaryContainer: Color(hex: "2A7B5A"),
+        onSecondaryContainer: Color(hex: "9B7A2A"),
         onTertiaryContainer: Color(hex: "4A2A1F"),
         error: Color(hex: "C62828"),
         onError: .white,
@@ -99,6 +107,8 @@ struct ThemeManager {
         onPrimary: .white,
         onSecondary: .black,
         onTertiary: .white,
+        onPrimaryContainer: .white,
+        onSecondaryContainer: .black,
         onTertiaryContainer: Color(hex: "FFD6B0"),
         error: Color(hex: "FF5252"),
         onError: .white,
@@ -118,6 +128,8 @@ struct ThemeManager {
         onPrimary: .white,
         onSecondary: .white,
         onTertiary: .white,
+        onPrimaryContainer: Color(hex: "6650A4"),
+        onSecondaryContainer: Color(hex: "625B71"),
         onTertiaryContainer: Color(hex: "4A1F2A"),
         error: Color(hex: "C2185B"),
         onError: .white,
@@ -137,6 +149,8 @@ struct ThemeManager {
         onPrimary: .black,
         onSecondary: .black,
         onTertiary: .black,
+        onPrimaryContainer: .white,
+        onSecondaryContainer: .white,
         onTertiaryContainer: Color(hex: "FFD6E0"),
         error: Color(hex: "FF6B9D"),
         onError: .white,

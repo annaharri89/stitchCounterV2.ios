@@ -260,7 +260,7 @@ struct ProjectRowView: View {
         .padding(.vertical, 8)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(isSelected && isMultiSelectMode ? colors.primaryContainer : Color.clear)
+                .fill(isSelected && isMultiSelectMode ? colors.secondaryContainer : Color.clear)
         )
         .contentShape(Rectangle())
         .onTapGesture {
