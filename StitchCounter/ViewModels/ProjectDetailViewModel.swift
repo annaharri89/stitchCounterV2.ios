@@ -15,6 +15,7 @@ final class ProjectDetailViewModel: ObservableObject {
     @Published var projectType: ProjectType = .single
     @Published var totalRows: String = ""
     @Published var notes: String = ""
+    @Published var isCompleted: Bool = false
     @Published var completedAt: Date?
     @Published var imagePaths: [String] = []
     @Published var isLoading: Bool = false
@@ -29,6 +30,7 @@ final class ProjectDetailViewModel: ObservableObject {
     private var originalTitle: String = ""
     private var originalTotalRows: String = ""
     private var originalNotes: String = ""
+    private var originalIsCompleted: Bool = false
     private var originalCompletedAt: Date?
     private var originalImagePaths: [String] = []
     
@@ -45,11 +47,13 @@ final class ProjectDetailViewModel: ObservableObject {
             self.projectType = existingProject.type
             totalRows = existingProject.totalRows > 0 ? String(existingProject.totalRows) : ""
             notes = existingProject.notes
+            isCompleted = existingProject.completedAt != nil
             completedAt = existingProject.completedAt
             imagePaths = existingProject.imagePaths
             originalTitle = existingProject.title
             originalTotalRows = totalRows
             originalNotes = existingProject.notes
+            originalIsCompleted = isCompleted
             originalCompletedAt = existingProject.completedAt
             originalImagePaths = existingProject.imagePaths
         } else {
@@ -59,11 +63,13 @@ final class ProjectDetailViewModel: ObservableObject {
             self.projectType = projectType
             totalRows = ""
             notes = ""
+            isCompleted = false
             completedAt = nil
             imagePaths = []
             originalTitle = ""
             originalTotalRows = ""
             originalNotes = ""
+            originalIsCompleted = false
             originalCompletedAt = nil
             originalImagePaths = []
         }
@@ -87,11 +93,13 @@ final class ProjectDetailViewModel: ObservableObject {
         projectType = existingProject.type
         totalRows = existingProject.totalRows > 0 ? String(existingProject.totalRows) : ""
         notes = existingProject.notes
+        isCompleted = existingProject.completedAt != nil
         completedAt = existingProject.completedAt
         imagePaths = existingProject.imagePaths
         originalTitle = existingProject.title
         originalTotalRows = totalRows
         originalNotes = existingProject.notes
+        originalIsCompleted = isCompleted
         originalCompletedAt = existingProject.completedAt
         originalImagePaths = existingProject.imagePaths
         
@@ -114,8 +122,9 @@ final class ProjectDetailViewModel: ObservableObject {
         triggerAutoSave()
     }
     
-    func updateCompletedAt(_ newCompletedAt: Date?) {
-        completedAt = newCompletedAt
+    func toggleCompleted(_ isCompleted: Bool) {
+        self.isCompleted = isCompleted
+        completedAt = isCompleted ? (completedAt ?? Date()) : nil
         recalculateHasUnsavedChanges()
         triggerAutoSave()
     }
@@ -142,7 +151,7 @@ final class ProjectDetailViewModel: ObservableObject {
         hasUnsavedChanges = title != originalTitle
             || totalRows != originalTotalRows
             || notes != originalNotes
-            || completedAt != originalCompletedAt
+            || isCompleted != originalIsCompleted
             || imagePaths != originalImagePaths
     }
     
@@ -173,6 +182,7 @@ final class ProjectDetailViewModel: ObservableObject {
         originalTitle = title
         originalTotalRows = totalRows
         originalNotes = notes
+        originalIsCompleted = isCompleted
         originalCompletedAt = completedAt
         originalImagePaths = imagePaths
         hasUnsavedChanges = false
@@ -196,6 +206,7 @@ final class ProjectDetailViewModel: ObservableObject {
         title = originalTitle
         totalRows = originalTotalRows
         notes = originalNotes
+        isCompleted = originalIsCompleted
         completedAt = originalCompletedAt
         imagePaths = originalImagePaths
         hasUnsavedChanges = false
@@ -246,6 +257,7 @@ final class ProjectDetailViewModel: ObservableObject {
         originalTitle = title
         originalTotalRows = totalRows
         originalNotes = notes
+        originalIsCompleted = isCompleted
         originalCompletedAt = completedAt
         originalImagePaths = imagePaths
         hasUnsavedChanges = false
