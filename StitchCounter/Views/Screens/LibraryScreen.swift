@@ -231,6 +231,10 @@ struct ProjectRowView: View {
                     .font(.headline)
                     .lineLimit(1)
                 
+                if project.completedAt != nil {
+                    finishedBadge
+                }
+                
                 HStack(spacing: 8) {
                     Label(project.type == .single ? "Single" : "Double", systemImage: project.type == .single ? "number.circle" : "number.circle.fill")
                         .font(.caption)
@@ -269,6 +273,18 @@ struct ProjectRowView: View {
         .onLongPressGesture {
             onLongPress()
         }
+    }
+    
+    private var finishedBadge: some View {
+        HStack(spacing: 4) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.caption2)
+            Text("Finished")
+                .font(.caption2)
+        }
+        .foregroundColor(colors.primary)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Finished")
     }
     
     @ViewBuilder

@@ -57,6 +57,10 @@ struct ProjectDetailScreen: View {
                         onRemoveImage: { viewModel.removeImagePath($0) }
                     )
                     
+                    if !isNewProject {
+                        markAsCompletedToggle
+                    }
+                    
                     if viewModel.isLoading {
                         ProgressView()
                             .frame(maxWidth: .infinity)
@@ -223,6 +227,19 @@ struct ProjectDetailScreen: View {
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Project Notes")
         .accessibilityHint("Enter notes about your project")
+    }
+    
+    private var markAsCompletedToggle: some View {
+        Toggle(isOn: Binding(
+            get: { viewModel.isCompleted },
+            set: { viewModel.toggleCompleted($0) }
+        )) {
+            Text("Mark as Completed")
+                .font(.body)
+        }
+        .tint(colors.primary)
+        .accessibilityLabel("Mark as Completed")
+        .accessibilityHint("Toggles whether this project is finished")
     }
     
     private var isFormValid: Bool {
