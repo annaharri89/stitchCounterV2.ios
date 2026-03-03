@@ -8,6 +8,7 @@ final class DoubleCounterViewModel: ObservableObject {
     @Published var stitchCounterState: CounterState = CounterState()
     @Published var rowCounterState: CounterState = CounterState()
     @Published var totalRows: Int = 0
+    @Published var totalStitchesEver: Int = 0
     @Published var isLoading: Bool = false
     
     var rowProgress: Float? {
@@ -44,10 +45,14 @@ final class DoubleCounterViewModel: ObservableObject {
             let rowAdjustment = AdjustmentAmount.allCases.first { $0.amount == project.rowAdjustment } ?? .one
             stitchCounterState = CounterState(count: project.stitchCounterNumber, adjustment: stitchAdjustment)
             rowCounterState = CounterState(count: project.rowCounterNumber, adjustment: rowAdjustment)
+            totalStitchesEver = project.totalStitchesEver
         }
     }
     
     func increment(_ type: CounterType) {
+        if type == .stitch {
+            totalStitchesEver += stitchCounterState.adjustment.amount
+        }
         updateCounter(type) { $0.incremented() }
     }
     
@@ -88,6 +93,7 @@ final class DoubleCounterViewModel: ObservableObject {
         stitchCounterState = CounterState()
         rowCounterState = CounterState()
         totalRows = 0
+        totalStitchesEver = 0
     }
     
     private func triggerAutoSave() {
@@ -109,6 +115,7 @@ final class DoubleCounterViewModel: ObservableObject {
         project.stitchAdjustment = stitchCounterState.adjustment.amount
         project.rowCounterNumber = rowCounterState.count
         project.rowAdjustment = rowCounterState.adjustment.amount
+        project.totalStitchesEver = totalStitchesEver
         projectService.saveProject(project)
     }
     
