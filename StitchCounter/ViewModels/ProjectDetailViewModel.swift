@@ -14,6 +14,8 @@ final class ProjectDetailViewModel: ObservableObject {
     @Published var title: String = ""
     @Published var projectType: ProjectType = .single
     @Published var totalRows: String = ""
+    @Published var notes: String = ""
+    @Published var completedAt: Date?
     @Published var imagePaths: [String] = []
     @Published var isLoading: Bool = false
     @Published var hasUnsavedChanges: Bool = false
@@ -26,6 +28,8 @@ final class ProjectDetailViewModel: ObservableObject {
     private let autoSaveDelayNanoseconds: UInt64 = 1_000_000_000
     private var originalTitle: String = ""
     private var originalTotalRows: String = ""
+    private var originalNotes: String = ""
+    private var originalCompletedAt: Date?
     private var originalImagePaths: [String] = []
     
     init(projectService: ProjectService) {
@@ -40,9 +44,13 @@ final class ProjectDetailViewModel: ObservableObject {
             title = existingProject.title
             self.projectType = existingProject.type
             totalRows = existingProject.totalRows > 0 ? String(existingProject.totalRows) : ""
+            notes = existingProject.notes
+            completedAt = existingProject.completedAt
             imagePaths = existingProject.imagePaths
             originalTitle = existingProject.title
             originalTotalRows = totalRows
+            originalNotes = existingProject.notes
+            originalCompletedAt = existingProject.completedAt
             originalImagePaths = existingProject.imagePaths
         } else {
             let newProject = Project(type: projectType)
@@ -50,9 +58,13 @@ final class ProjectDetailViewModel: ObservableObject {
             title = ""
             self.projectType = projectType
             totalRows = ""
+            notes = ""
+            completedAt = nil
             imagePaths = []
             originalTitle = ""
             originalTotalRows = ""
+            originalNotes = ""
+            originalCompletedAt = nil
             originalImagePaths = []
         }
         
@@ -74,9 +86,13 @@ final class ProjectDetailViewModel: ObservableObject {
         title = existingProject.title
         projectType = existingProject.type
         totalRows = existingProject.totalRows > 0 ? String(existingProject.totalRows) : ""
+        notes = existingProject.notes
+        completedAt = existingProject.completedAt
         imagePaths = existingProject.imagePaths
         originalTitle = existingProject.title
         originalTotalRows = totalRows
+        originalNotes = existingProject.notes
+        originalCompletedAt = existingProject.completedAt
         originalImagePaths = existingProject.imagePaths
         
         isLoading = false
@@ -87,14 +103,26 @@ final class ProjectDetailViewModel: ObservableObject {
     
     func updateTitle(_ newTitle: String) {
         title = newTitle
-        hasUnsavedChanges = newTitle != originalTitle || totalRows != originalTotalRows || imagePaths != originalImagePaths
+        recalculateHasUnsavedChanges()
         titleError = newTitle.trimmingCharacters(in: .whitespaces).isEmpty ? "Title is required" : nil
+        triggerAutoSave()
+    }
+    
+    func updateNotes(_ newNotes: String) {
+        notes = newNotes
+        recalculateHasUnsavedChanges()
+        triggerAutoSave()
+    }
+    
+    func updateCompletedAt(_ newCompletedAt: Date?) {
+        completedAt = newCompletedAt
+        recalculateHasUnsavedChanges()
         triggerAutoSave()
     }
     
     func updateTotalRows(_ newTotalRows: String) {
         totalRows = newTotalRows
-        hasUnsavedChanges = title != originalTitle || newTotalRows != originalTotalRows || imagePaths != originalImagePaths
+        recalculateHasUnsavedChanges()
         
         let totalRowsValue = Int(newTotalRows) ?? 0
         let isDoubleCounter = projectType == .double
@@ -108,6 +136,14 @@ final class ProjectDetailViewModel: ObservableObject {
         }
         
         triggerAutoSave()
+    }
+    
+    private func recalculateHasUnsavedChanges() {
+        hasUnsavedChanges = title != originalTitle
+            || totalRows != originalTotalRows
+            || notes != originalNotes
+            || completedAt != originalCompletedAt
+            || imagePaths != originalImagePaths
     }
     
     private func triggerAutoSave() {
@@ -129,11 +165,15 @@ final class ProjectDetailViewModel: ObservableObject {
         
         existingProject.title = title
         existingProject.totalRows = Int(totalRows) ?? 0
+        existingProject.notes = notes
+        existingProject.completedAt = completedAt
         existingProject.imagePaths = imagePaths
         projectService.saveProject(existingProject)
         
         originalTitle = title
         originalTotalRows = totalRows
+        originalNotes = notes
+        originalCompletedAt = completedAt
         originalImagePaths = imagePaths
         hasUnsavedChanges = false
     }
@@ -155,6 +195,8 @@ final class ProjectDetailViewModel: ObservableObject {
     func discardChanges() {
         title = originalTitle
         totalRows = originalTotalRows
+        notes = originalNotes
+        completedAt = originalCompletedAt
         imagePaths = originalImagePaths
         hasUnsavedChanges = false
         titleError = nil
@@ -195,12 +237,16 @@ final class ProjectDetailViewModel: ObservableObject {
         let newProject = projectService.createProject(type: projectType)
         newProject.title = title
         newProject.totalRows = totalRowsValue
+        newProject.notes = notes
+        newProject.completedAt = completedAt
         newProject.imagePaths = imagePaths
         projectService.saveProject(newProject)
         
         project = newProject
         originalTitle = title
         originalTotalRows = totalRows
+        originalNotes = notes
+        originalCompletedAt = completedAt
         originalImagePaths = imagePaths
         hasUnsavedChanges = false
         titleError = nil
