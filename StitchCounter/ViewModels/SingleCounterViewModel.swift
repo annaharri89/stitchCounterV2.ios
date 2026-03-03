@@ -6,6 +6,7 @@ final class SingleCounterViewModel: ObservableObject {
     @Published var projectId: UUID?
     @Published var title: String = ""
     @Published var counterState: CounterState = CounterState()
+    @Published var totalStitchesEver: Int = 0
     @Published var isLoading: Bool = false
     
     private let projectService: ProjectService
@@ -34,10 +35,12 @@ final class SingleCounterViewModel: ObservableObject {
         if !preserveCounter {
             let adjustment = AdjustmentAmount.allCases.first { $0.amount == project.stitchAdjustment } ?? .one
             counterState = CounterState(count: project.stitchCounterNumber, adjustment: adjustment)
+            totalStitchesEver = project.totalStitchesEver
         }
     }
     
     func increment() {
+        totalStitchesEver += counterState.adjustment.amount
         counterState = counterState.incremented()
         triggerAutoSave()
     }
@@ -61,6 +64,7 @@ final class SingleCounterViewModel: ObservableObject {
         projectId = nil
         title = ""
         counterState = CounterState()
+        totalStitchesEver = 0
     }
     
     private func triggerAutoSave() {
@@ -80,6 +84,7 @@ final class SingleCounterViewModel: ObservableObject {
         
         project.stitchCounterNumber = counterState.count
         project.stitchAdjustment = counterState.adjustment.amount
+        project.totalStitchesEver = totalStitchesEver
         projectService.saveProject(project)
     }
     
