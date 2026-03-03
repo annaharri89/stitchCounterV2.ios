@@ -49,11 +49,17 @@ struct ProjectDetailScreen: View {
                         }
                     }
                     
+                    notesField
+                    
                     ProjectImageSelectorView(
                         imagePaths: viewModel.imagePaths,
                         onAddImage: { viewModel.addImage($0) },
                         onRemoveImage: { viewModel.removeImagePath($0) }
                     )
+                    
+                    if !isNewProject {
+                        markAsCompletedToggle
+                    }
                     
                     if viewModel.isLoading {
                         ProgressView()
@@ -188,6 +194,52 @@ struct ProjectDetailScreen: View {
                     .foregroundColor(colors.error)
             }
         }
+    }
+    
+    private var notesField: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Project Notes")
+                .font(.subheadline)
+                .foregroundColor(colors.onSurface.opacity(0.6))
+            
+            ZStack(alignment: .topLeading) {
+                if viewModel.notes.isEmpty {
+                    Text("Add notes about your project")
+                        .foregroundColor(colors.onSurface.opacity(0.3))
+                        .padding(.horizontal, 4)
+                        .padding(.vertical, 8)
+                        .accessibilityHidden(true)
+                }
+                
+                TextEditor(text: Binding(
+                    get: { viewModel.notes },
+                    set: { viewModel.updateNotes($0) }
+                ))
+                .frame(minHeight: 100)
+                .scrollContentBackground(.hidden)
+                .padding(2)
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .stroke(colors.onSurface.opacity(0.3), lineWidth: 1)
+                )
+            }
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Project Notes")
+        .accessibilityHint("Enter notes about your project")
+    }
+    
+    private var markAsCompletedToggle: some View {
+        Toggle(isOn: Binding(
+            get: { viewModel.isCompleted },
+            set: { viewModel.toggleCompleted($0) }
+        )) {
+            Text("Mark as Completed")
+                .font(.body)
+        }
+        .tint(colors.primary)
+        .accessibilityLabel("Mark as Completed")
+        .accessibilityHint("Toggles whether this project is finished")
     }
     
     private var isFormValid: Bool {
