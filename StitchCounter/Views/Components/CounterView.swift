@@ -4,10 +4,12 @@ struct CounterView: View {
     let label: String?
     let count: Int
     let selectedAdjustment: AdjustmentAmount
+    let customAdjustmentAmount: Int
     let onIncrement: () -> Void
     let onDecrement: () -> Void
     let onReset: () -> Void
     let onAdjustmentTapped: (AdjustmentAmount) -> Void
+    let onCustomAdjustmentAmountChanged: (Int) -> Void
     let showResetButton: Bool
     let counterNumberIsVertical: Bool
     
@@ -17,20 +19,24 @@ struct CounterView: View {
         label: String? = nil,
         count: Int,
         selectedAdjustment: AdjustmentAmount,
+        customAdjustmentAmount: Int = AdjustmentAmount.custom.defaultAmount,
         onIncrement: @escaping () -> Void,
         onDecrement: @escaping () -> Void,
         onReset: @escaping () -> Void,
         onAdjustmentTapped: @escaping (AdjustmentAmount) -> Void,
+        onCustomAdjustmentAmountChanged: @escaping (Int) -> Void = { _ in },
         showResetButton: Bool = true,
         counterNumberIsVertical: Bool = false
     ) {
         self.label = label
         self.count = count
         self.selectedAdjustment = selectedAdjustment
+        self.customAdjustmentAmount = customAdjustmentAmount
         self.onIncrement = onIncrement
         self.onDecrement = onDecrement
         self.onReset = onReset
         self.onAdjustmentTapped = onAdjustmentTapped
+        self.onCustomAdjustmentAmountChanged = onCustomAdjustmentAmountChanged
         self.showResetButton = showResetButton
         self.counterNumberIsVertical = counterNumberIsVertical
     }
@@ -65,7 +71,7 @@ struct CounterView: View {
                     Button {
                         onReset()
                     } label: {
-                        Text("Reset")
+                        Text("action_reset")
                             .font(.subheadline)
                             .fontWeight(.medium)
                             .padding(.horizontal, 16)
@@ -80,7 +86,9 @@ struct CounterView: View {
                 
                 AdjustmentButtonsView(
                     selectedAdjustment: selectedAdjustment,
-                    onAdjustmentTapped: onAdjustmentTapped
+                    customAdjustmentAmount: customAdjustmentAmount,
+                    onAdjustmentTapped: onAdjustmentTapped,
+                    onCustomAdjustmentAmountChanged: onCustomAdjustmentAmountChanged
                 )
             }
         }
@@ -92,10 +100,12 @@ struct CounterView: View {
         label: "Stitches",
         count: 42,
         selectedAdjustment: .five,
+        customAdjustmentAmount: 10,
         onIncrement: {},
         onDecrement: {},
         onReset: {},
-        onAdjustmentTapped: { _ in }
+        onAdjustmentTapped: { _ in },
+        onCustomAdjustmentAmountChanged: { _ in }
     )
     .padding()
 }

@@ -41,10 +41,12 @@ struct SingleCounterScreen: View {
             CounterView(
                 count: viewModel.counterState.count,
                 selectedAdjustment: viewModel.counterState.adjustment,
+                customAdjustmentAmount: viewModel.counterState.customAdjustmentAmount,
                 onIncrement: { viewModel.increment() },
                 onDecrement: { viewModel.decrement() },
                 onReset: { showResetDialog = true },
                 onAdjustmentTapped: { viewModel.changeAdjustment($0) },
+                onCustomAdjustmentAmountChanged: { viewModel.setCustomAdjustmentAmount($0) },
                 showResetButton: false,
                 counterNumberIsVertical: true
             )
@@ -62,10 +64,12 @@ struct SingleCounterScreen: View {
             CounterView(
                 count: viewModel.counterState.count,
                 selectedAdjustment: viewModel.counterState.adjustment,
+                customAdjustmentAmount: viewModel.counterState.customAdjustmentAmount,
                 onIncrement: { viewModel.increment() },
                 onDecrement: { viewModel.decrement() },
                 onReset: { showResetDialog = true },
                 onAdjustmentTapped: { viewModel.changeAdjustment($0) },
+                onCustomAdjustmentAmountChanged: { viewModel.setCustomAdjustmentAmount($0) },
                 showResetButton: false,
                 counterNumberIsVertical: false
             )

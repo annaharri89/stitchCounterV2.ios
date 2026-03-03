@@ -62,20 +62,24 @@ struct DoubleCounterScreen: View {
                 label: "Stitches",
                 count: viewModel.stitchCounterState.count,
                 selectedAdjustment: viewModel.stitchCounterState.adjustment,
+                customAdjustmentAmount: viewModel.stitchCounterState.customAdjustmentAmount,
                 onIncrement: { viewModel.increment(.stitch) },
                 onDecrement: { viewModel.decrement(.stitch) },
                 onReset: { resetDialogType = .stitch },
-                onAdjustmentTapped: { viewModel.changeAdjustment(.stitch, value: $0) }
+                onAdjustmentTapped: { viewModel.changeAdjustment(.stitch, value: $0) },
+                onCustomAdjustmentAmountChanged: { viewModel.setCustomAdjustmentAmount(.stitch, value: $0) }
             )
             
             CounterView(
                 label: "Rows/Rounds",
                 count: viewModel.rowCounterState.count,
                 selectedAdjustment: viewModel.rowCounterState.adjustment,
+                customAdjustmentAmount: viewModel.rowCounterState.customAdjustmentAmount,
                 onIncrement: { viewModel.increment(.row) },
                 onDecrement: { viewModel.decrement(.row) },
                 onReset: { resetDialogType = .row },
-                onAdjustmentTapped: { viewModel.changeAdjustment(.row, value: $0) }
+                onAdjustmentTapped: { viewModel.changeAdjustment(.row, value: $0) },
+                onCustomAdjustmentAmountChanged: { viewModel.setCustomAdjustmentAmount(.row, value: $0) }
             )
             
             Spacer()
@@ -101,20 +105,24 @@ struct DoubleCounterScreen: View {
                     label: "Stitches",
                     count: viewModel.stitchCounterState.count,
                     selectedAdjustment: viewModel.stitchCounterState.adjustment,
+                    customAdjustmentAmount: viewModel.stitchCounterState.customAdjustmentAmount,
                     onIncrement: { viewModel.increment(.stitch) },
                     onDecrement: { viewModel.decrement(.stitch) },
                     onReset: { resetDialogType = .stitch },
-                    onAdjustmentTapped: { viewModel.changeAdjustment(.stitch, value: $0) }
+                    onAdjustmentTapped: { viewModel.changeAdjustment(.stitch, value: $0) },
+                    onCustomAdjustmentAmountChanged: { viewModel.setCustomAdjustmentAmount(.stitch, value: $0) }
                 )
                 
                 CounterView(
                     label: "Rows/Rounds",
                     count: viewModel.rowCounterState.count,
                     selectedAdjustment: viewModel.rowCounterState.adjustment,
+                    customAdjustmentAmount: viewModel.rowCounterState.customAdjustmentAmount,
                     onIncrement: { viewModel.increment(.row) },
                     onDecrement: { viewModel.decrement(.row) },
                     onReset: { resetDialogType = .row },
-                    onAdjustmentTapped: { viewModel.changeAdjustment(.row, value: $0) }
+                    onAdjustmentTapped: { viewModel.changeAdjustment(.row, value: $0) },
+                    onCustomAdjustmentAmountChanged: { viewModel.setCustomAdjustmentAmount(.row, value: $0) }
                 )
             }
             
