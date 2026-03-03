@@ -3,7 +3,13 @@ import SwiftData
 import Combine
 
 @MainActor
-final class ProjectService: ObservableObject {
+protocol ProjectServiceProtocol {
+    func getProject(by id: UUID) -> Project?
+    func saveProject(_ project: Project)
+}
+
+@MainActor
+final class ProjectService: ObservableObject, ProjectServiceProtocol {
     private let modelContainer: ModelContainer
     private let modelContext: ModelContext
     

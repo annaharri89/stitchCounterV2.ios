@@ -41,7 +41,22 @@
 		A1000032001 /* SheetDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000032000 /* SheetDestination.swift */; };
 		A1000033001 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000033000 /* AppCoordinator.swift */; };
 		A1000034001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1000034000 /* Assets.xcassets */; };
+		A2000001001 /* MockProjectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000001000 /* MockProjectService.swift */; };
+		A2000002001 /* AdjustmentAmountTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000002000 /* AdjustmentAmountTests.swift */; };
+		A2000003001 /* CounterStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000003000 /* CounterStateTests.swift */; };
+		A2000004001 /* SingleCounterViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000004000 /* SingleCounterViewModelTests.swift */; };
+		A2000005001 /* DoubleCounterViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000005000 /* DoubleCounterViewModelTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A2000000006 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A1000000019 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A1000000015;
+			remoteInfo = StitchCounter;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		A1000000001 /* StitchCounter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StitchCounter.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -79,10 +94,23 @@
 		A1000032000 /* SheetDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetDestination.swift; sourceTree = "<group>"; };
 		A1000033000 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		A1000034000 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A2000000001 /* StitchCounterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StitchCounterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2000001000 /* MockProjectService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProjectService.swift; sourceTree = "<group>"; };
+		A2000002000 /* AdjustmentAmountTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustmentAmountTests.swift; sourceTree = "<group>"; };
+		A2000003000 /* CounterStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterStateTests.swift; sourceTree = "<group>"; };
+		A2000004000 /* SingleCounterViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleCounterViewModelTests.swift; sourceTree = "<group>"; };
+		A2000005000 /* DoubleCounterViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleCounterViewModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A1000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A2000000002 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -96,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				A1000000004 /* StitchCounter */,
+				A2000000003 /* StitchCounterTests */,
 				A1000000005 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -119,6 +148,7 @@
 			isa = PBXGroup;
 			children = (
 				A1000000001 /* StitchCounter.app */,
+				A2000000001 /* StitchCounterTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -221,6 +251,18 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		A2000000003 /* StitchCounterTests */ = {
+			isa = PBXGroup;
+			children = (
+				A2000001000 /* MockProjectService.swift */,
+				A2000002000 /* AdjustmentAmountTests.swift */,
+				A2000003000 /* CounterStateTests.swift */,
+				A2000004000 /* SingleCounterViewModelTests.swift */,
+				A2000005000 /* DoubleCounterViewModelTests.swift */,
+			);
+			path = StitchCounterTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -241,6 +283,23 @@
 			productReference = A1000000001 /* StitchCounter.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A2000000004 /* StitchCounterTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A2000000008 /* Build configuration list for PBXNativeTarget "StitchCounterTests" */;
+			buildPhases = (
+				A2000000005 /* Sources */,
+				A2000000002 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A2000000007 /* PBXTargetDependency */,
+			);
+			name = StitchCounterTests;
+			productName = StitchCounterTests;
+			productReference = A2000000001 /* StitchCounterTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -253,6 +312,10 @@
 				TargetAttributes = {
 					A1000000015 = {
 						CreatedOnToolsVersion = 15.0;
+					};
+					A2000000004 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = A1000000015;
 					};
 				};
 			};
@@ -270,6 +333,7 @@
 			projectRoot = "";
 			targets = (
 				A1000000015 /* StitchCounter */,
+				A2000000004 /* StitchCounterTests */,
 			);
 		};
 /* End PBXProject section */
@@ -326,7 +390,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A2000000005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A2000001001 /* MockProjectService.swift in Sources */,
+				A2000002001 /* AdjustmentAmountTests.swift in Sources */,
+				A2000003001 /* CounterStateTests.swift in Sources */,
+				A2000004001 /* SingleCounterViewModelTests.swift in Sources */,
+				A2000005001 /* DoubleCounterViewModelTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A2000000007 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A1000000015 /* StitchCounter */;
+			targetProxy = A2000000006 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		A1000000021 /* Debug */ = {
@@ -514,6 +598,46 @@
 			};
 			name = Release;
 		};
+		A2000000009 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stitchcounter.ios.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StitchCounter.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/StitchCounter";
+			};
+			name = Debug;
+		};
+		A2000000010 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stitchcounter.ios.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StitchCounter.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/StitchCounter";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -531,6 +655,15 @@
 			buildConfigurations = (
 				A1000000021 /* Debug */,
 				A1000000022 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A2000000008 /* Build configuration list for PBXNativeTarget "StitchCounterTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A2000000009 /* Debug */,
+				A2000000010 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
