@@ -82,14 +82,13 @@ struct CounterView: View {
                     }
                 }
                 
-                Spacer()
-                
                 AdjustmentButtonsView(
                     selectedAdjustment: selectedAdjustment,
                     customAdjustmentAmount: customAdjustmentAmount,
                     onAdjustmentTapped: onAdjustmentTapped,
                     onCustomAdjustmentAmountChanged: onCustomAdjustmentAmountChanged
                 )
+                .frame(maxWidth: .infinity)
             }
         }
     }

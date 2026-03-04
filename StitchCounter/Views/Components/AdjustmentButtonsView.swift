@@ -17,7 +17,11 @@ struct AdjustmentButtonsView: View {
     var body: some View {
         HStack(spacing: 8) {
             ForEach(AdjustmentAmount.allCases) { amount in
-                adjustmentButton(for: amount)
+                if amount == .custom {
+                    customAdjustmentButton
+                } else {
+                    adjustmentButton(for: amount)
+                }
             }
         }
         .alert(
@@ -39,64 +43,67 @@ struct AdjustmentButtonsView: View {
         }
     }
     
-    @ViewBuilder
     private func adjustmentButton(for amount: AdjustmentAmount) -> some View {
         let isSelected = amount == selectedAdjustment
         
-        Button {
+        return Button {
             onAdjustmentTapped(amount)
         } label: {
-            HStack(spacing: 4) {
-                Text(amount.displayText(customAmount: resolvedCustomAmount))
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                
-                if amount == .custom {
-                    Image(systemName: "pencil")
-                        .font(.caption)
-                        .accessibilityHidden(true)
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(isSelected ? colors.secondary : colors.tertiary)
-            .foregroundColor(isSelected ? colors.onSecondary : colors.onTertiary)
-            .cornerRadius(8)
+            Text(amount.displayText(customAmount: resolvedCustomAmount))
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .frame(minWidth: 44, minHeight: 44)
+                .background(isSelected ? colors.secondary : colors.tertiary)
+                .foregroundColor(isSelected ? colors.onSecondary : colors.onTertiary)
+                .cornerRadius(8)
         }
         .accessibilityLabel(
             amount == .custom
                 ? "Custom +\(resolvedCustomAmount)"
                 : amount.displayText
         )
-        .accessibilityHint(
-            amount == .custom
-                ? "Long press to change custom amount"
-                : ""
-        )
-        .if(amount == .custom) { view in
-            view.contextMenu {
-                Button {
+    }
+    
+    private var customAdjustmentButton: some View {
+        let isSelected = selectedAdjustment == .custom
+        
+        return HStack(spacing: 6) {
+            Text(AdjustmentAmount.custom.displayText(customAmount: resolvedCustomAmount))
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .fixedSize(horizontal: true, vertical: false)
+                .layoutPriority(1)
+                .frame(minHeight: 44)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    onAdjustmentTapped(.custom)
+                }
+            
+            Image(systemName: "pencil")
+                .font(.caption)
+                .frame(width: 24, height: 24)
+                .contentShape(Rectangle())
+                .onTapGesture {
                     customAdjustmentInput = "\(resolvedCustomAmount)"
                     showCustomAdjustmentAlert = true
-                } label: {
-                    Label("Edit Custom Amount", systemImage: "pencil")
                 }
-            }
+                .accessibilityElement()
+                .accessibilityLabel("Edit custom adjustment amount")
+                .accessibilityHint("Opens a dialog to enter a custom number")
+                .accessibilityAddTraits(.isButton)
         }
-    }
-}
-
-private extension View {
-    @ViewBuilder
-    func `if`<Content: View>(
-        _ condition: Bool,
-        transform: (Self) -> Content
-    ) -> some View {
-        if condition {
-            transform(self)
-        } else {
-            self
-        }
+        .fixedSize(horizontal: true, vertical: false)
+        .padding(.leading, 16)
+        .padding(.trailing, 12)
+        .padding(.vertical, 8)
+        .background(isSelected ? colors.secondary : colors.tertiary)
+        .foregroundColor(isSelected ? colors.onSecondary : colors.onTertiary)
+        .cornerRadius(8)
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Custom +\(resolvedCustomAmount)")
+        .accessibilityHint("Tap amount to select custom adjustment")
     }
 }
 
