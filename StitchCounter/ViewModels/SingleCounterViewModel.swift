@@ -9,11 +9,11 @@ final class SingleCounterViewModel: ObservableObject {
     @Published var totalStitchesEver: Int = 0
     @Published var isLoading: Bool = false
     
-    private let projectService: ProjectService
+    private let projectService: ProjectServiceProtocol
     private var autoSaveTask: Task<Void, Never>?
     private let autoSaveDelayNanoseconds: UInt64 = 1_000_000_000
     
-    init(projectService: ProjectService) {
+    init(projectService: ProjectServiceProtocol) {
         self.projectService = projectService
     }
     
@@ -33,14 +33,18 @@ final class SingleCounterViewModel: ObservableObject {
         title = project.title
         
         if !preserveCounter {
-            let adjustment = AdjustmentAmount.allCases.first { $0.amount == project.stitchAdjustment } ?? .one
-            counterState = CounterState(count: project.stitchCounterNumber, adjustment: adjustment)
+            let (adjustment, customAmount) = AdjustmentAmount.fromPersistedAmount(project.stitchAdjustment)
+            counterState = CounterState(
+                count: project.stitchCounterNumber,
+                adjustment: adjustment,
+                customAdjustmentAmount: customAmount
+            )
             totalStitchesEver = project.totalStitchesEver
         }
     }
     
     func increment() {
-        totalStitchesEver += counterState.adjustment.amount
+        totalStitchesEver += counterState.resolvedAdjustmentAmount
         counterState = counterState.incremented()
         triggerAutoSave()
     }
@@ -57,6 +61,11 @@ final class SingleCounterViewModel: ObservableObject {
     
     func changeAdjustment(_ value: AdjustmentAmount) {
         counterState = counterState.withAdjustment(value)
+        triggerAutoSave()
+    }
+    
+    func setCustomAdjustmentAmount(_ value: Int) {
+        counterState = counterState.withCustomAdjustmentAmount(value)
         triggerAutoSave()
     }
     
@@ -83,7 +92,7 @@ final class SingleCounterViewModel: ObservableObject {
               let project = projectService.getProject(by: projectId) else { return }
         
         project.stitchCounterNumber = counterState.count
-        project.stitchAdjustment = counterState.adjustment.amount
+        project.stitchAdjustment = counterState.resolvedAdjustmentAmount
         project.totalStitchesEver = totalStitchesEver
         projectService.saveProject(project)
     }
