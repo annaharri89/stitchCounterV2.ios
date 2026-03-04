@@ -23,6 +23,7 @@
 		A1000014001 /* LibraryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000014000 /* LibraryViewModel.swift */; };
 		A1000015001 /* ProjectDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000015000 /* ProjectDetailViewModel.swift */; };
 		A1000016001 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000016000 /* SettingsViewModel.swift */; };
+		A1000035001 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000035000 /* Constants.swift */; };
 		A1000017001 /* AdjustmentButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000017000 /* AdjustmentButtonsView.swift */; };
 		A1000018001 /* IncreaseDecreaseButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000018000 /* IncreaseDecreaseButtonsView.swift */; };
 		A1000019001 /* CounterDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000019000 /* CounterDisplayView.swift */; };
@@ -94,6 +95,7 @@
 		A1000032000 /* SheetDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetDestination.swift; sourceTree = "<group>"; };
 		A1000033000 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		A1000034000 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A1000035000 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		A2000000001 /* StitchCounterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StitchCounterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2000001000 /* MockProjectService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProjectService.swift; sourceTree = "<group>"; };
 		A2000002000 /* AdjustmentAmountTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustmentAmountTests.swift; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				A1000001000 /* StitchCounterApp.swift */,
+				A1000035000 /* Constants.swift */,
 				A1000000006 /* Models */,
 				A1000000007 /* Theme */,
 				A1000000008 /* Services */,
@@ -370,6 +373,7 @@
 				A1000014001 /* LibraryViewModel.swift in Sources */,
 				A1000015001 /* ProjectDetailViewModel.swift in Sources */,
 				A1000016001 /* SettingsViewModel.swift in Sources */,
+				A1000035001 /* Constants.swift in Sources */,
 				A1000017001 /* AdjustmentButtonsView.swift in Sources */,
 				A1000018001 /* IncreaseDecreaseButtonsView.swift in Sources */,
 				A1000019001 /* CounterDisplayView.swift in Sources */,
