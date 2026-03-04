@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 @MainActor
 final class AppCoordinator: ObservableObject {
@@ -7,6 +8,7 @@ final class AppCoordinator: ObservableObject {
     
     let projectService: ProjectService
     let themeService: ThemeService
+    private var cancellables = Set<AnyCancellable>()
     
     lazy var libraryViewModel: LibraryViewModel = {
         LibraryViewModel(projectService: projectService)
@@ -19,6 +21,12 @@ final class AppCoordinator: ObservableObject {
     init() {
         self.projectService = ProjectService()
         self.themeService = ThemeService()
+        
+        themeService.objectWillChange
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
     }
     
     func createSingleCounterViewModel() -> SingleCounterViewModel {
