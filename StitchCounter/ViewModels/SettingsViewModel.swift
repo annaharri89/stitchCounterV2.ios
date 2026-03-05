@@ -70,4 +70,29 @@ final class SettingsViewModel: ObservableObject {
         importedCount = 0
         failedCount = 0
     }
+
+    func onReportBug() -> URL? {
+        makeSupportEmailURL(with: AppConstants.bugReportSubject)
+    }
+
+    func onGiveFeedback() -> URL? {
+        makeSupportEmailURL(with: AppConstants.feedbackSubject)
+    }
+
+    func onRequestFeature() -> URL? {
+        makeSupportEmailURL(with: AppConstants.featureRequestSubject)
+    }
+
+    func onOpenPrivacyPolicy() -> URL? {
+        URL(string: AppConstants.privacyPolicyURL)
+    }
+
+    func onOpenEULA() -> URL? {
+        URL(string: AppConstants.eulaURL)
+    }
+
+    private func makeSupportEmailURL(with subject: String) -> URL? {
+        let encodedSubject = subject.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? subject
+        return URL(string: "mailto:\(AppConstants.supportEmail)?subject=\(encodedSubject)")
+    }
 }
