@@ -16,7 +16,7 @@ final class ThemeService: ObservableObject {
            let theme = AppTheme(rawValue: storedTheme) {
             self.currentTheme = theme
         } else {
-            self.currentTheme = .seaCottage
+            self.currentTheme = .forestFiber
         }
     }
     
