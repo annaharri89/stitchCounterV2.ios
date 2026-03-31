@@ -21,7 +21,64 @@ struct ThemeColors {
     let background: Color
 }
 
+struct ThemeDisplaySwatch: Identifiable {
+    let name: String
+    let light: Color
+    let dark: Color
+
+    var id: String { name }
+}
+
 struct ThemeManager {
+    static func displaySwatches(for theme: AppTheme) -> [ThemeDisplaySwatch] {
+        let lightColors = colors(for: theme, isDark: false)
+        let darkColors = colors(for: theme, isDark: true)
+        switch theme {
+        case .seaCottage:
+            return [
+                ThemeDisplaySwatch(name: "Mint", light: lightColors.secondary, dark: darkColors.secondary),
+                ThemeDisplaySwatch(name: "Surf", light: lightColors.primary, dark: darkColors.primary),
+                ThemeDisplaySwatch(name: "Whale Light", light: lightColors.tertiary, dark: darkColors.tertiary),
+                ThemeDisplaySwatch(name: "Whale Dark", light: lightColors.quaternary, dark: darkColors.quaternary),
+            ]
+        case .goldenHearth:
+            return [
+                ThemeDisplaySwatch(name: "Terracotta", light: lightColors.primary, dark: darkColors.primary),
+                ThemeDisplaySwatch(name: "Honey", light: lightColors.secondary, dark: darkColors.secondary),
+                ThemeDisplaySwatch(name: "Sage", light: lightColors.tertiary, dark: darkColors.tertiary),
+                ThemeDisplaySwatch(name: "Plum", light: lightColors.quaternary, dark: darkColors.quaternary),
+            ]
+        case .forestFiber:
+            return [
+                ThemeDisplaySwatch(name: "Moss", light: lightColors.primary, dark: darkColors.primary),
+                ThemeDisplaySwatch(name: "Sage", light: lightColors.secondary, dark: darkColors.secondary),
+                ThemeDisplaySwatch(name: "Wood", light: lightColors.tertiary, dark: darkColors.tertiary),
+                ThemeDisplaySwatch(name: "Clay", light: lightColors.quaternary, dark: darkColors.quaternary),
+            ]
+        case .cloudSoft:
+            return [
+                ThemeDisplaySwatch(name: "Misty Blue", light: lightColors.primary, dark: darkColors.primary),
+                ThemeDisplaySwatch(name: "Pale Sky", light: lightColors.secondary, dark: darkColors.secondary),
+                ThemeDisplaySwatch(name: "Linen", light: lightColors.tertiary, dark: darkColors.tertiary),
+                ThemeDisplaySwatch(name: "Mauve", light: lightColors.quaternary, dark: darkColors.quaternary),
+            ]
+        case .yarnCandy:
+            return [
+                ThemeDisplaySwatch(name: "Periwinkle", light: lightColors.primary, dark: darkColors.primary),
+                ThemeDisplaySwatch(name: "Cotton Candy", light: lightColors.secondary, dark: darkColors.secondary),
+                ThemeDisplaySwatch(name: "Lavender", light: lightColors.tertiary, dark: darkColors.tertiary),
+                ThemeDisplaySwatch(name: "Peachy Pink", light: lightColors.quaternary, dark: darkColors.quaternary),
+            ]
+        case .dustyRose:
+            return [
+                ThemeDisplaySwatch(name: "Rose", light: lightColors.primary, dark: darkColors.primary),
+                ThemeDisplaySwatch(name: "Blush", light: lightColors.secondary, dark: darkColors.secondary),
+                ThemeDisplaySwatch(name: "Sage", light: lightColors.tertiary, dark: darkColors.tertiary),
+                ThemeDisplaySwatch(name: "Plum", light: lightColors.quaternary, dark: darkColors.quaternary),
+            ]
+        }
+    }
+
     static func colors(for theme: AppTheme, isDark: Bool) -> ThemeColors {
         switch theme {
         case .seaCottage:
