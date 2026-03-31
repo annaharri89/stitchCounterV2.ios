@@ -247,6 +247,11 @@ struct SettingsScreen: View {
     private var themeSection: some View {
         Section {
             DisclosureGroup(isExpanded: $isThemeSectionExpanded) {
+                Text("settings.theme.chooseScheme")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.top, 4)
                 ForEach(AppTheme.allCases) { theme in
                     ThemeOptionRow(
                         theme: theme,
@@ -484,53 +489,85 @@ struct ThemeOptionRow: View {
         Button {
             onSelect()
         } label: {
-            HStack(spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
                 ThemeIconPreview(theme: theme, isDark: colorScheme == .dark, isSelected: isSelected)
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(theme.displayName)
-                        .font(.body)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(LocalizedStringKey(theme.displayNameLocalizationKey))
+                        .font(.title3)
+                        .fontWeight(.semibold)
                         .foregroundColor(colors.onSurface)
 
                     if isSelected {
-                        themeColorPreviews
+                        Text("settings.theme.colorsInTheme")
+                            .font(.subheadline)
+                            .foregroundColor(colors.onSurface.opacity(0.7))
+                        ForEach(ThemeManager.displaySwatches(for: theme)) { swatch in
+                            ThemeDisplaySwatchRow(swatch: swatch)
+                        }
                     }
                 }
 
-                Spacer()
+                Spacer(minLength: 8)
 
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.title2)
                     .foregroundColor(isSelected ? colors.primary : colors.onSurface.opacity(0.4))
+                    .padding(.top, 4)
             }
             .padding(.vertical, 8)
-        }
-        .accessibilityLabel(
-            Text(
-                String(
-                    format: String(localized: "settings.theme.option.accessibilityLabel"),
-                    theme.displayName
-                )
+            .padding(.horizontal, 4)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(isSelected ? colors.primaryContainer.opacity(0.35) : Color.clear)
             )
-        )
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(LocalizedStringKey(theme.displayNameLocalizationKey)))
         .accessibilityHint(
             Text(
                 isSelected
-                ? String(localized: "settings.theme.option.accessibilityHint.selected")
-                : String(localized: "settings.theme.option.accessibilityHint.select")
+                    ? String(localized: "settings.theme.option.accessibilityHint.selected")
+                    : String(localized: "settings.theme.option.accessibilityHint.select")
             )
         )
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
+}
 
-    private var themeColorPreviews: some View {
-        let previewColors = ThemeManager.colors(for: theme, isDark: colorScheme == .dark)
-        return HStack(spacing: 8) {
-            Circle().fill(previewColors.primary).frame(width: 20, height: 20)
-            Circle().fill(previewColors.secondary).frame(width: 20, height: 20)
-            Circle().fill(previewColors.tertiary).frame(width: 20, height: 20)
-            Circle().fill(previewColors.quaternary).frame(width: 20, height: 20)
+struct ThemeDisplaySwatchRow: View {
+    let swatch: ThemeDisplaySwatch
+
+    @Environment(\.themeColors) private var colors
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Circle()
+                .fill(swatch.light)
+                .frame(width: 24, height: 24)
+                .accessibilityHidden(true)
+            Text(swatch.name)
+                .font(.caption)
+                .foregroundColor(colors.onSurface.opacity(0.75))
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Circle()
+                .fill(swatch.dark)
+                .frame(width: 24, height: 24)
+                .accessibilityHidden(true)
+            Text("settings.theme.dark")
+                .font(.caption)
+                .foregroundColor(colors.onSurface.opacity(0.75))
         }
-        .accessibilityHidden(true)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(
+            Text(
+                String(
+                    format: String(localized: "settings.theme.swatchRowA11y"),
+                    swatch.name
+                )
+            )
+        )
     }
 }
 
