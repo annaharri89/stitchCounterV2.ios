@@ -70,7 +70,6 @@ final class ProjectService: ObservableObject, ProjectServiceProtocol {
         fetchProjects()
     }
     
-
     private func documentsDirectoryURL() -> URL? {
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
     }
@@ -139,94 +138,50 @@ final class ProjectService: ObservableObject, ProjectServiceProtocol {
     }
     
     // MARK: - Export / Import
-    
-    func exportLibrary() throws -> URL {
-        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            throw ProjectServiceError.documentsDirectoryUnavailable
-        }
-        
-        let timestamp = ISO8601DateFormatter().string(from: Date())
-            .replacingOccurrences(of: ":", with: "-")
-        let exportFileName = "stitch_counter_backup_\(timestamp).json"
-        let exportURL = documentsDirectory.appendingPathComponent(exportFileName)
-        
-        let dateFormatter = ISO8601DateFormatter()
-        let exportData = projects.map { project in
-            var dict: [String: Any] = [
-                "id": project.id.uuidString,
-                "type": project.type.rawValue,
-                "title": project.title,
-                "notes": project.notes,
-                "stitchCounterNumber": project.stitchCounterNumber,
-                "stitchAdjustment": project.stitchAdjustment,
-                "rowCounterNumber": project.rowCounterNumber,
-                "rowAdjustment": project.rowAdjustment,
-                "totalRows": project.totalRows,
-                "imagePaths": project.imagePaths,
-                "createdAt": dateFormatter.string(from: project.createdAt),
-                "updatedAt": dateFormatter.string(from: project.updatedAt),
-                "totalStitchesEver": project.totalStitchesEver
-            ]
-            if let completedAt = project.completedAt {
-                dict["completedAt"] = dateFormatter.string(from: completedAt)
-            }
-            return dict
-        }
-        
-        let jsonData = try JSONSerialization.data(withJSONObject: exportData, options: .prettyPrinted)
-        try jsonData.write(to: exportURL)
-        return exportURL
-    }
-    
-    func importLibrary(from url: URL) throws -> (importedCount: Int, failedCount: Int) {
-        let data = try Data(contentsOf: url)
-        guard let projectsArray = try JSONSerialization.jsonObject(with: data) as? [[String: Any]] else {
-            throw ProjectServiceError.invalidBackupFormat
-        }
-        
-        var importedCount = 0
-        var failedCount = 0
-        let dateFormatter = ISO8601DateFormatter()
-        
-        for projectDict in projectsArray {
-            guard let typeString = projectDict["type"] as? String,
-                  let type = ProjectType(rawValue: typeString),
-                  let title = projectDict["title"] as? String else {
-                failedCount += 1
-                continue
-            }
-            
-            let newProject = createProject(type: type)
-            newProject.title = title
-            newProject.notes = projectDict["notes"] as? String ?? ""
-            newProject.stitchCounterNumber = projectDict["stitchCounterNumber"] as? Int ?? 0
-            newProject.stitchAdjustment = projectDict["stitchAdjustment"] as? Int ?? 1
-            newProject.rowCounterNumber = projectDict["rowCounterNumber"] as? Int ?? 0
-            newProject.rowAdjustment = projectDict["rowAdjustment"] as? Int ?? 1
-            newProject.totalRows = projectDict["totalRows"] as? Int ?? 0
-            newProject.totalStitchesEver = projectDict["totalStitchesEver"] as? Int ?? 0
-            if let completedAtString = projectDict["completedAt"] as? String {
-                newProject.completedAt = dateFormatter.date(from: completedAtString)
-            }
-            
-            saveProject(newProject)
-            importedCount += 1
-        }
-        
-        return (importedCount, failedCount)
-    }
-}
 
-enum ProjectServiceError: LocalizedError {
-    case documentsDirectoryUnavailable
-    case invalidBackupFormat
-    
-    var errorDescription: String? {
-        switch self {
-        case .documentsDirectoryUnavailable:
-            String(localized: "Could not access documents directory")
-        case .invalidBackupFormat:
-            String(localized: "Invalid backup format")
+    func exportLibrary() throws -> URL {
+        guard let documentsDirectory = documentsDirectoryURL() else {
+            throw LibraryBackupError.documentsDirectoryUnavailable
         }
+        let appVersion =
+            Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+            ?? Bundle.main.infoDictionary?["CFBundleVersion"] as? String
+            ?? "1.0"
+        return try LibraryBackupManager.exportZip(
+            projects: projects,
+            documentsDirectory: documentsDirectory,
+            appVersion: appVersion
+        )
+    }
+
+    func importLibrary(from url: URL) throws -> LibraryImportResult {
+        guard let documentsDirectory = documentsDirectoryURL() else {
+            throw LibraryBackupError.documentsDirectoryUnavailable
+        }
+
+        let fileManager = FileManager.default
+        let fileData = try Data(contentsOf: url)
+        let treatAsZip = LibraryBackupManager.shouldTreatAsZipImport(
+            fileData: fileData,
+            pathExtension: url.pathExtension
+        )
+        guard treatAsZip else {
+            throw LibraryBackupError.notZipFile
+        }
+
+        let tempZip = fileManager.temporaryDirectory.appendingPathComponent("stitch_import_\(UUID().uuidString).zip")
+        try fileData.write(to: tempZip)
+        defer {
+            try? fileManager.removeItem(at: tempZip)
+        }
+        let result = try LibraryBackupManager.importFromZip(
+            zipURL: tempZip,
+            documentsDirectory: documentsDirectory
+        ) { project in
+            modelContext.insert(project)
+        }
+        saveContext()
+        fetchProjects()
+        return result
     }
 }
