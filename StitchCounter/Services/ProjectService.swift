@@ -70,10 +70,27 @@ final class ProjectService: ObservableObject, ProjectServiceProtocol {
         fetchProjects()
     }
     
+
+    private func documentsDirectoryURL() -> URL? {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+    }
+
+    func resolvedImagePathForDisplay(_ storedPath: String) -> String {
+        guard let documentsDirectory = documentsDirectoryURL() else {
+            return storedPath
+        }
+        return ProjectImagePathResolver.absolutePathForLoading(
+            storedPath: storedPath,
+            documentsDirectory: documentsDirectory
+        )
+    }
+
     private func deleteProjectImages(_ project: Project) {
+        guard let documentsDirectory = documentsDirectoryURL() else { return }
         let fileManager = FileManager.default
         for path in project.imagePaths {
-            try? fileManager.removeItem(atPath: path)
+            let url = ProjectImagePathResolver.fileURL(storedPath: path, documentsDirectory: documentsDirectory)
+            try? fileManager.removeItem(at: url)
         }
     }
     
@@ -86,33 +103,37 @@ final class ProjectService: ObservableObject, ProjectServiceProtocol {
     }
     
     func saveImage(_ imageData: Data, for project: Project, at index: Int) -> String? {
-        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+        guard let documentsDirectory = documentsDirectoryURL() else {
             return nil
         }
-        
-        let projectImagesDirectory = documentsDirectory.appendingPathComponent("ProjectImages/\(project.id.uuidString)")
-        
+
+        let projectImagesDirectory = documentsDirectory.appendingPathComponent("project_images", isDirectory: true)
+
         do {
             try FileManager.default.createDirectory(at: projectImagesDirectory, withIntermediateDirectories: true)
         } catch {
             print("StitchCounter_ProjectService_CreateDirectoryFailed: \(error)")
             return nil
         }
-        
-        let fileName = "image_\(index)_\(Date().timeIntervalSince1970).jpg"
+
+        let fileName =
+            "project_\(Int(Date().timeIntervalSince1970 * 1000))_\(UUID().uuidString)_\(index).jpg"
         let fileURL = projectImagesDirectory.appendingPathComponent(fileName)
-        
+
         do {
             try imageData.write(to: fileURL)
-            return fileURL.path
+            return "project_images/\(fileName)"
         } catch {
             print("StitchCounter_ProjectService_SaveImageFailed: \(error)")
             return nil
         }
     }
-    
+
     func removeImage(at path: String, from project: Project) {
-        try? FileManager.default.removeItem(atPath: path)
+        if let documentsDirectory = documentsDirectoryURL() {
+            let url = ProjectImagePathResolver.fileURL(storedPath: path, documentsDirectory: documentsDirectory)
+            try? FileManager.default.removeItem(at: url)
+        }
         project.imagePaths.removeAll { $0 == path }
         saveProject(project)
     }

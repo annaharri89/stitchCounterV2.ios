@@ -109,6 +109,7 @@ struct LibraryScreen: View {
             ForEach(viewModel.projects, id: \.id) { project in
                 ProjectRowView(
                     project: project,
+                    resolveImagePath: { viewModel.projectService.resolvedImagePathForDisplay($0) },
                     isSelected: viewModel.selectedProjectIds.contains(project.id),
                     isMultiSelectMode: viewModel.isMultiSelectMode,
                     onTap: {
@@ -208,6 +209,7 @@ struct LibraryScreen: View {
 
 struct ProjectRowView: View {
     let project: Project
+    let resolveImagePath: (String) -> String
     let isSelected: Bool
     let isMultiSelectMode: Bool
     let onTap: () -> Void
@@ -290,7 +292,7 @@ struct ProjectRowView: View {
     @ViewBuilder
     private var projectImage: some View {
         if let firstImagePath = project.imagePaths.first,
-           let uiImage = UIImage(contentsOfFile: firstImagePath) {
+           let uiImage = UIImage(contentsOfFile: resolveImagePath(firstImagePath)) {
             Image(uiImage: uiImage)
                 .resizable()
                 .scaledToFill()

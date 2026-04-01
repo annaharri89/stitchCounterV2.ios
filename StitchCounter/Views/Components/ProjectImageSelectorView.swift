@@ -3,6 +3,7 @@ import PhotosUI
 
 struct ProjectImageSelectorView: View {
     let imagePaths: [String]
+    let imagePathForDisplay: (String) -> String
     let onAddImage: (Data) -> Void
     let onRemoveImage: (String) -> Void
     
@@ -32,6 +33,7 @@ struct ProjectImageSelectorView: View {
                     ForEach(imagePaths, id: \.self) { path in
                         ProjectImageThumbnail(
                             imagePath: path,
+                            absolutePathForLoading: imagePathForDisplay(path),
                             onRemove: { onRemoveImage(path) }
                         )
                     }
@@ -63,13 +65,14 @@ struct AddImageButton: View {
 
 struct ProjectImageThumbnail: View {
     let imagePath: String
+    let absolutePathForLoading: String
     let onRemove: () -> Void
     
     @Environment(\.themeColors) private var colors
     
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            if let uiImage = UIImage(contentsOfFile: imagePath) {
+            if let uiImage = UIImage(contentsOfFile: absolutePathForLoading) {
                 Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFill()
@@ -103,6 +106,7 @@ struct ProjectImageThumbnail: View {
 #Preview {
     ProjectImageSelectorView(
         imagePaths: [],
+        imagePathForDisplay: { $0 },
         onAddImage: { _ in },
         onRemoveImage: { _ in }
     )

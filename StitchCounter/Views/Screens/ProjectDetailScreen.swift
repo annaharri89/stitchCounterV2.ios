@@ -53,6 +53,7 @@ struct ProjectDetailScreen: View {
                     
                     ProjectImageSelectorView(
                         imagePaths: viewModel.imagePaths,
+                        imagePathForDisplay: { viewModel.resolvedImagePathForDisplay($0) },
                         onAddImage: { viewModel.addImage($0) },
                         onRemoveImage: { viewModel.removeImagePath($0) }
                     )

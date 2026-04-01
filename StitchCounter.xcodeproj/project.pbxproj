@@ -43,6 +43,7 @@
 		A1000033001 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000033000 /* AppCoordinator.swift */; };
 		A1000034001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1000034000 /* Assets.xcassets */; };
 		A1000036001 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A1000036000 /* Localizable.xcstrings */; };
+		A1000040101 /* ProjectImagePathResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000040100 /* ProjectImagePathResolver.swift */; };
 		A2000001001 /* MockProjectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000001000 /* MockProjectService.swift */; };
 		A2000002001 /* AdjustmentAmountTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000002000 /* AdjustmentAmountTests.swift */; };
 		A2000003001 /* CounterStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000003000 /* CounterStateTests.swift */; };
@@ -98,6 +99,7 @@
 		A1000034000 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A1000035000 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		A1000036000 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		A1000040100 /* ProjectImagePathResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectImagePathResolver.swift; sourceTree = "<group>"; };
 		A2000000001 /* StitchCounterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StitchCounterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2000001000 /* MockProjectService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProjectService.swift; sourceTree = "<group>"; };
 		A2000002000 /* AdjustmentAmountTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustmentAmountTests.swift; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 			children = (
 				A1000010000 /* ThemeService.swift */,
 				A1000011000 /* ProjectService.swift */,
+				A1000040100 /* ProjectImagePathResolver.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -372,6 +375,7 @@
 				A1000009001 /* ThemeEnvironment.swift in Sources */,
 				A1000010001 /* ThemeService.swift in Sources */,
 				A1000011001 /* ProjectService.swift in Sources */,
+				A1000040101 /* ProjectImagePathResolver.swift in Sources */,
 				A1000012001 /* SingleCounterViewModel.swift in Sources */,
 				A1000013001 /* DoubleCounterViewModel.swift in Sources */,
 				A1000014001 /* LibraryViewModel.swift in Sources */,
