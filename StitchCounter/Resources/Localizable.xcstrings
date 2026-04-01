@@ -45,6 +45,17 @@
     "Cancel" : {
 
     },
+    "common.cancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
     "common.error.prefixed" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -66,9 +77,6 @@
           }
         }
       }
-    },
-    "Could not access documents directory" : {
-
     },
     "Create" : {
 
@@ -128,9 +136,6 @@
 
     },
     "Finished" : {
-
-    },
-    "Invalid backup format" : {
 
     },
     "Library" : {
@@ -196,7 +201,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exports your library as a JSON file"
+            "value" : "Exports your library as a ZIP file compatible with Stitch Counter on Android and iOS"
           }
         }
       }
@@ -208,6 +213,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Export Library"
+          }
+        }
+      }
+    },
+    "settings.backup.exportImportTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export / import library"
           }
         }
       }
@@ -229,7 +245,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Imports a library from a JSON file"
+            "value" : "Imports a Stitch Counter backup from a .zip file (same format as Android)"
           }
         }
       }
@@ -256,6 +272,17 @@
         }
       }
     },
+    "settings.backup.localNote" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backups are stored on this device. Use Export to save a copy to Files, iCloud Drive, or another app."
+          }
+        }
+      }
+    },
     "settings.backup.sectionTitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -263,6 +290,127 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Backup & Restore"
+          }
+        }
+      }
+    },
+    "settings.bugReport.diagnosticsNote" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diagnostics attachment included (see stitch_counter_diagnostics.txt)."
+          }
+        }
+      }
+    },
+    "settings.bugReport.dialogMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We can attach a small diagnostics file to help reproduce the issue. You can turn this off if you prefer."
+          }
+        }
+      }
+    },
+    "settings.bugReport.dialogTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Report a bug"
+          }
+        }
+      }
+    },
+    "settings.bugReport.includeDiagnostics" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Include diagnostics"
+          }
+        }
+      }
+    },
+    "settings.bugReport.send" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send"
+          }
+        }
+      }
+    },
+    "settings.error.backupInvalid" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This backup could not be read. Make sure it is a Stitch Counter export."
+          }
+        }
+      }
+    },
+    "settings.error.backupNotZip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please choose a Stitch Counter backup .zip file."
+          }
+        }
+      }
+    },
+    "settings.error.backupUnsafe" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This backup file is not safe to import."
+          }
+        }
+      }
+    },
+    "settings.error.backupUnsupportedVersion" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This backup was created by a newer version of the app. Update and try again."
+          }
+        }
+      }
+    },
+    "settings.error.storageUnavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Storage is not available. Try again or free up space."
+          }
+        }
+      }
+    },
+    "settings.error.unexpected" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Something went wrong. Please try again."
           }
         }
       }
@@ -509,6 +657,39 @@
         }
       }
     },
+    "settings.theme.chooseScheme" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose color scheme"
+          }
+        }
+      }
+    },
+    "settings.theme.colorsInTheme" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colors in this theme"
+          }
+        }
+      }
+    },
+    "settings.theme.dark" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dark"
+          }
+        }
+      }
+    },
     "settings.theme.option.accessibilityHint.select" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -553,39 +734,6 @@
         }
       }
     },
-    "settings.theme.chooseScheme" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose color scheme"
-          }
-        }
-      }
-    },
-    "settings.theme.colorsInTheme" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Colors in this theme"
-          }
-        }
-      }
-    },
-    "settings.theme.dark" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dark"
-          }
-        }
-      }
-    },
     "settings.theme.swatchRowA11y" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -596,6 +744,26 @@
           }
         }
       }
+    },
+    "settings.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
+    },
+    "Single" : {
+
+    },
+    "Stitch Counter" : {
+
+    },
+    "Tap amount to select custom adjustment" : {
+
     },
     "theme.displayName.cloudSoft" : {
       "extractionState" : "manual",
@@ -662,26 +830,6 @@
           }
         }
       }
-    },
-    "settings.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Settings"
-          }
-        }
-      }
-    },
-    "Single" : {
-
-    },
-    "Stitch Counter" : {
-
-    },
-    "Tap amount to select custom adjustment" : {
-
     },
     "Toggles whether this project is finished" : {
 

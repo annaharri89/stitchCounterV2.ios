@@ -82,10 +82,10 @@ enum BackupRestoreOption: CaseIterable {
         }
     }
 
-    func errorMessage(exportError: String?, importError: String?) -> String? {
+    func errorLocalizationKey(exportErrorKey: String?, importErrorKey: String?) -> String? {
         switch self {
-        case .export: return exportError
-        case .importLibrary: return importError
+        case .export: return exportErrorKey
+        case .importLibrary: return importErrorKey
         }
     }
 }
@@ -179,6 +179,9 @@ struct SettingsScreen: View {
     @State private var showMailUnavailableAlert = false
     @State private var pendingSupportSubject = ""
     @State private var exportURL: URL?
+    @State private var showBugReportOptions = false
+    @State private var bugReportIncludeDiagnostics = true
+    @State private var showImportSummary = false
 
     @Environment(\.themeColors) private var colors
     @Environment(\.openURL) private var openURL
@@ -196,35 +199,43 @@ struct SettingsScreen: View {
         }
         .fileImporter(
             isPresented: $showImportPicker,
-            allowedContentTypes: [UTType.json],
+            allowedContentTypes: [UTType.zip],
             onCompletion: handleImport
         )
-        .sheet(isPresented: $showExportShare) {
+        .sheet(isPresented: $showExportShare, onDismiss: {
+            viewModel.clearExportStatus()
+        }) {
             if let url = exportURL {
                 ShareSheet(activityItems: [url])
             }
         }
-        .alert("settings.import.complete.title", isPresented: $viewModel.importSuccess) {
+        .sheet(item: $viewModel.mailComposePayload) { payload in
+            MailComposeView(
+                recipients: payload.recipients,
+                subject: payload.subject,
+                body: payload.body,
+                attachmentData: payload.attachmentData,
+                attachmentMimeType: payload.attachmentMimeType,
+                attachmentFileName: payload.attachmentFileName
+            )
+            .onDisappear {
+                viewModel.dismissMailComposer()
+            }
+        }
+        .sheet(isPresented: $showBugReportOptions) {
+            bugReportOptionsSheet
+        }
+        .onChange(of: viewModel.importSuccess) { _, success in
+            if success {
+                showImportSummary = true
+            }
+        }
+        .alert("settings.import.complete.title", isPresented: $showImportSummary) {
             Button("common.ok") {
                 viewModel.clearImportStatus()
             }
         } message: {
-            VStack {
-                Text(
-                    String(
-                        format: String(localized: "settings.import.complete.importedCount"),
-                        Int64(viewModel.importedCount)
-                    )
-                )
-                if viewModel.failedCount > 0 {
-                    Text(
-                        String(
-                            format: String(localized: "settings.import.complete.failedCount"),
-                            Int64(viewModel.failedCount)
-                        )
-                    )
-                }
-            }
+            importSummaryMessage
         }
         .alert("settings.support.mailUnavailable.title", isPresented: $showMailUnavailableAlert) {
             Button("settings.support.mailUnavailable.copyEmail") {
@@ -239,6 +250,58 @@ struct SettingsScreen: View {
                     pendingSupportSubject
                 )
             )
+        }
+    }
+
+    private var bugReportOptionsSheet: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    Text("settings.bugReport.dialogMessage")
+                    Toggle("settings.bugReport.includeDiagnostics", isOn: $bugReportIncludeDiagnostics)
+                }
+                Section {
+                    Button("settings.bugReport.send") {
+                        showBugReportOptions = false
+                        viewModel.onLaunchingExternalActivity()
+                        sendBugReportFlow(includeDiagnostics: bugReportIncludeDiagnostics)
+                    }
+                    Button("common.cancel", role: .cancel) {
+                        showBugReportOptions = false
+                    }
+                }
+            }
+            .navigationTitle("settings.bugReport.dialogTitle")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+        .presentationDetents([.medium])
+    }
+
+    @ViewBuilder
+    private var importSummaryMessage: some View {
+        if let result = viewModel.importResult {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(
+                    String(
+                        format: String(localized: "settings.import.complete.importedCount"),
+                        Int64(result.importedCount)
+                    )
+                )
+                if result.failedCount > 0 {
+                    Text(
+                        String(
+                            format: String(localized: "settings.import.complete.failedCount"),
+                            Int64(result.failedCount)
+                        )
+                    )
+                    .foregroundColor(colors.error)
+                    if !result.failedProjectNames.isEmpty {
+                        Text(result.failedProjectNames.joined(separator: "\n"))
+                            .font(.caption)
+                            .foregroundStyle(colors.onSurface.opacity(0.8))
+                    }
+                }
+            }
         }
     }
 
@@ -273,7 +336,10 @@ struct SettingsScreen: View {
     private var backupSection: some View {
         Section {
             DisclosureGroup(isExpanded: $isBackupSectionExpanded) {
-                VStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("settings.backup.exportImportTitle")
+                        .font(.title3)
+                        .fontWeight(.semibold)
                     ForEach(BackupRestoreOption.allCases) { option in
                         SettingsActionButton(
                             titleLocalizationKey: option.displayTitleLocalizationKey(
@@ -289,20 +355,18 @@ struct SettingsScreen: View {
                             handleBackupAction(option)
                         }
 
-                        if let error = option.errorMessage(
-                            exportError: viewModel.exportError,
-                            importError: viewModel.importError
+                        if let errorKey = option.errorLocalizationKey(
+                            exportErrorKey: viewModel.exportErrorLocalizationKey,
+                            importErrorKey: viewModel.importErrorLocalizationKey
                         ) {
-                            Text(
-                                String(
-                                    format: String(localized: "common.error.prefixed"),
-                                    error
-                                )
-                            )
+                            Text(LocalizedStringKey(errorKey))
                                 .font(.caption)
                                 .foregroundColor(colors.error)
                         }
                     }
+                    Text("settings.backup.localNote")
+                        .font(.caption)
+                        .foregroundColor(colors.onSurface.opacity(0.7))
                 }
                 .padding(.vertical, 16)
             } label: {
@@ -377,6 +441,7 @@ struct SettingsScreen: View {
     // MARK: - Helpers
 
     private func exportLibrary() {
+        viewModel.onLaunchingExternalActivity()
         Task {
             if let url = await viewModel.exportLibrary() {
                 exportURL = url
@@ -395,22 +460,70 @@ struct SettingsScreen: View {
                 await viewModel.importLibrary(from: url)
             }
         case .failure(let error):
-            viewModel.importError = error.localizedDescription
+            print("[SettingsScreen] event=import_picker_failed error=\(error.localizedDescription)")
         }
     }
 
     private func handleBackupAction(_ option: BackupRestoreOption) {
         switch option {
-        case .export: exportLibrary()
-        case .importLibrary: showImportPicker = true
+        case .export:
+            exportLibrary()
+        case .importLibrary:
+            viewModel.onLaunchingExternalActivity()
+            showImportPicker = true
         }
     }
 
     private func handleSupportAction(_ option: SupportOption) {
         switch option {
-        case .reportBug: openSupportEmailURL(viewModel.onReportBug(), subject: AppConstants.bugReportSubject)
-        case .giveFeedback: openSupportEmailURL(viewModel.onGiveFeedback(), subject: AppConstants.feedbackSubject)
-        case .requestFeature: openSupportEmailURL(viewModel.onRequestFeature(), subject: AppConstants.featureRequestSubject)
+        case .reportBug:
+            bugReportIncludeDiagnostics = true
+            showBugReportOptions = true
+        case .giveFeedback:
+            viewModel.onLaunchingExternalActivity()
+            sendFeedbackFlow()
+        case .requestFeature:
+            viewModel.onLaunchingExternalActivity()
+            sendFeatureRequestFlow()
+        }
+    }
+
+    private func sendBugReportFlow(includeDiagnostics: Bool) {
+        if let payload = viewModel.makeBugReportMailPayload(includeDiagnostics: includeDiagnostics) {
+            viewModel.mailComposePayload = payload
+            return
+        }
+        if let url = viewModel.mailtoURLForBugReport(includeDiagnostics: includeDiagnostics) {
+            openSupportEmailURL(url, subject: AppConstants.bugReportSubject)
+        } else {
+            pendingSupportSubject = AppConstants.bugReportSubject
+            showMailUnavailableAlert = true
+        }
+    }
+
+    private func sendFeedbackFlow() {
+        if let payload = viewModel.makeGiveFeedbackMailPayload() {
+            viewModel.mailComposePayload = payload
+            return
+        }
+        if let url = viewModel.mailtoURLForFeedback() {
+            openSupportEmailURL(url, subject: AppConstants.feedbackSubject)
+        } else {
+            pendingSupportSubject = AppConstants.feedbackSubject
+            showMailUnavailableAlert = true
+        }
+    }
+
+    private func sendFeatureRequestFlow() {
+        if let payload = viewModel.makeFeatureRequestMailPayload() {
+            viewModel.mailComposePayload = payload
+            return
+        }
+        if let url = viewModel.mailtoURLForFeatureRequest() {
+            openSupportEmailURL(url, subject: AppConstants.featureRequestSubject)
+        } else {
+            pendingSupportSubject = AppConstants.featureRequestSubject
+            showMailUnavailableAlert = true
         }
     }
 
