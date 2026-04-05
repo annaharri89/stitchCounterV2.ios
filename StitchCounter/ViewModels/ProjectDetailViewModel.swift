@@ -37,6 +37,10 @@ final class ProjectDetailViewModel: ObservableObject {
     init(projectService: ProjectService) {
         self.projectService = projectService
     }
+
+    func resolvedImagePathForDisplay(_ storedPath: String) -> String {
+        projectService.resolvedImagePathForDisplay(storedPath)
+    }
     
     func loadProject(_ projectId: UUID?, projectType: ProjectType) {
         isLoading = true

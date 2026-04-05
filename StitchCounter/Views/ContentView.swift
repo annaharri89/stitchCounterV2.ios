@@ -3,10 +3,11 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var coordinator = AppCoordinator()
     @Environment(\.colorScheme) private var colorScheme
-    
+    @Environment(\.scenePhase) private var scenePhase
+
     var body: some View {
         let themeColors = coordinator.themeService.colors(for: colorScheme)
-        
+
         TabView(selection: $coordinator.currentTab) {
             LibraryScreen(
                 viewModel: coordinator.libraryViewModel,
@@ -25,6 +26,11 @@ struct ContentView: View {
         }
         .tint(themeColors.primary)
         .themeColors(themeColors)
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .background {
+                coordinator.themeService.applyPendingAlternateIconIfNeeded()
+            }
+        }
         .sheet(item: $coordinator.showingSheet) { destination in
             sheetContent(for: destination)
                 .themeColors(themeColors)

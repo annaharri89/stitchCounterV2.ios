@@ -1,0 +1,845 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%lld" : {
+
+    },
+    "%lld selected" : {
+
+    },
+    "%lld/%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld/%2$lld"
+          }
+        }
+      }
+    },
+    "%lld/%lld rows" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld/%2$lld rows"
+          }
+        }
+      }
+    },
+    "+" : {
+
+    },
+    "−" : {
+
+    },
+    "action_reset" : {
+
+    },
+    "Add notes about your project" : {
+
+    },
+    "Are you sure you want to reset the %@ counter to 0?" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "common.cancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "common.error.prefixed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error: %@"
+          }
+        }
+      }
+    },
+    "common.ok" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
+    "Create" : {
+
+    },
+    "Create new project" : {
+
+    },
+    "Create Project" : {
+
+    },
+    "Create your first project to start tracking your stitches" : {
+
+    },
+    "Creates a new double counter project" : {
+
+    },
+    "Creates a new single counter project" : {
+
+    },
+    "Custom +%lld" : {
+
+    },
+    "Custom adjustment amount" : {
+
+    },
+    "Delete" : {
+
+    },
+    "Discard" : {
+
+    },
+    "Discard Changes?" : {
+
+    },
+    "Double" : {
+
+    },
+    "Edit custom adjustment amount" : {
+
+    },
+    "Edit Project" : {
+
+    },
+    "Enter a custom adjustment amount" : {
+
+    },
+    "Enter amount" : {
+
+    },
+    "Enter notes about your project" : {
+
+    },
+    "Enter project title" : {
+
+    },
+    "Enter total rows" : {
+
+    },
+    "Finished" : {
+
+    },
+    "Library" : {
+
+    },
+    "Mark as Completed" : {
+
+    },
+    "New Double Counter" : {
+
+    },
+    "New Double Tracker" : {
+
+    },
+    "New Project" : {
+
+    },
+    "New Single Counter" : {
+
+    },
+    "New Single Tracker" : {
+
+    },
+    "No Projects Yet" : {
+
+    },
+    "Opens a dialog to enter a custom number" : {
+
+    },
+    "Opens options to create a single or double counter project" : {
+
+    },
+    "Project Images" : {
+
+    },
+    "Project Notes" : {
+
+    },
+    "Project Title" : {
+
+    },
+    "Project title is required. Do you want to discard this project?" : {
+
+    },
+    "Reset" : {
+
+    },
+    "Reset %@ Counter?" : {
+
+    },
+    "Save" : {
+
+    },
+    "Select projects" : {
+
+    },
+    "Set Custom Amount" : {
+
+    },
+    "settings.backup.export.hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exports your library as a ZIP file compatible with Stitch Counter on Android and iOS"
+          }
+        }
+      }
+    },
+    "settings.backup.export.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export Library"
+          }
+        }
+      }
+    },
+    "settings.backup.exportImportTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export / import library"
+          }
+        }
+      }
+    },
+    "settings.backup.exporting.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exporting..."
+          }
+        }
+      }
+    },
+    "settings.backup.import.hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imports a Stitch Counter backup from a .zip file (same format as Android)"
+          }
+        }
+      }
+    },
+    "settings.backup.import.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import Library"
+          }
+        }
+      }
+    },
+    "settings.backup.importing.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importing..."
+          }
+        }
+      }
+    },
+    "settings.backup.localNote" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backups are stored on this device. Use Export to save a copy to Files, iCloud Drive, or another app."
+          }
+        }
+      }
+    },
+    "settings.backup.sectionTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup & Restore"
+          }
+        }
+      }
+    },
+    "settings.bugReport.diagnosticsNote" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diagnostics attachment included (see stitch_counter_diagnostics.txt)."
+          }
+        }
+      }
+    },
+    "settings.bugReport.dialogMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We can attach a small diagnostics file to help reproduce the issue. You can turn this off if you prefer."
+          }
+        }
+      }
+    },
+    "settings.bugReport.dialogTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Report a bug"
+          }
+        }
+      }
+    },
+    "settings.bugReport.includeDiagnostics" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Include diagnostics"
+          }
+        }
+      }
+    },
+    "settings.bugReport.send" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send"
+          }
+        }
+      }
+    },
+    "settings.error.backupInvalid" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This backup could not be read. Make sure it is a Stitch Counter export."
+          }
+        }
+      }
+    },
+    "settings.error.backupNotZip" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please choose a Stitch Counter backup .zip file."
+          }
+        }
+      }
+    },
+    "settings.error.backupUnsafe" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This backup file is not safe to import."
+          }
+        }
+      }
+    },
+    "settings.error.backupUnsupportedVersion" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This backup was created by a newer version of the app. Update and try again."
+          }
+        }
+      }
+    },
+    "settings.error.storageUnavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Storage is not available. Try again or free up space."
+          }
+        }
+      }
+    },
+    "settings.error.unexpected" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Something went wrong. Please try again."
+          }
+        }
+      }
+    },
+    "settings.import.complete.failedCount" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to import %lld project(s)"
+          }
+        }
+      }
+    },
+    "settings.import.complete.importedCount" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imported %lld project(s)"
+          }
+        }
+      }
+    },
+    "settings.import.complete.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import Complete"
+          }
+        }
+      }
+    },
+    "settings.legal.eula.hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens the end user license agreement in Safari"
+          }
+        }
+      }
+    },
+    "settings.legal.eula.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EULA"
+          }
+        }
+      }
+    },
+    "settings.legal.privacyPolicy.hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens the privacy policy in Safari"
+          }
+        }
+      }
+    },
+    "settings.legal.privacyPolicy.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy Policy"
+          }
+        }
+      }
+    },
+    "settings.legal.sectionAccessibilityHint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expands to show privacy and legal links"
+          }
+        }
+      }
+    },
+    "settings.legal.sectionAccessibilityLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy and Legal section"
+          }
+        }
+      }
+    },
+    "settings.legal.sectionTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy & Legal"
+          }
+        }
+      }
+    },
+    "settings.support.giveFeedback.hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens email with a prefilled feedback subject"
+          }
+        }
+      }
+    },
+    "settings.support.giveFeedback.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Give Feedback"
+          }
+        }
+      }
+    },
+    "settings.support.mailUnavailable.copyEmail" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy Email Address"
+          }
+        }
+      }
+    },
+    "settings.support.mailUnavailable.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to open Mail on this device. Email %@ with subject: %@"
+          }
+        }
+      }
+    },
+    "settings.support.mailUnavailable.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mail Unavailable"
+          }
+        }
+      }
+    },
+    "settings.support.reportBug.hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens email with a prefilled bug report subject"
+          }
+        }
+      }
+    },
+    "settings.support.reportBug.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Report a Bug"
+          }
+        }
+      }
+    },
+    "settings.support.requestFeature.hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens email with a prefilled feature request subject"
+          }
+        }
+      }
+    },
+    "settings.support.requestFeature.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Request a Feature"
+          }
+        }
+      }
+    },
+    "settings.support.sectionAccessibilityHint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expands to show support options"
+          }
+        }
+      }
+    },
+    "settings.support.sectionAccessibilityLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support section"
+          }
+        }
+      }
+    },
+    "settings.support.sectionTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support"
+          }
+        }
+      }
+    },
+    "settings.theme.chooseScheme" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose color scheme"
+          }
+        }
+      }
+    },
+    "settings.theme.colorsInTheme" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colors in this theme"
+          }
+        }
+      }
+    },
+    "settings.theme.dark" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dark"
+          }
+        }
+      }
+    },
+    "settings.theme.option.accessibilityHint.select" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Double tap to select"
+          }
+        }
+      }
+    },
+    "settings.theme.option.accessibilityHint.selected" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Currently selected"
+          }
+        }
+      }
+    },
+    "settings.theme.option.accessibilityLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ theme"
+          }
+        }
+      }
+    },
+    "settings.theme.sectionTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Theme Settings"
+          }
+        }
+      }
+    },
+    "settings.theme.swatchRowA11y" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, light and dark appearance swatches"
+          }
+        }
+      }
+    },
+    "settings.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
+    },
+    "Single" : {
+
+    },
+    "Stitch Counter" : {
+
+    },
+    "Tap amount to select custom adjustment" : {
+
+    },
+    "theme.displayName.cloudSoft" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cloud Soft"
+          }
+        }
+      }
+    },
+    "theme.displayName.dustyRose" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dusty Rose"
+          }
+        }
+      }
+    },
+    "theme.displayName.forestFiber" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forest Fiber"
+          }
+        }
+      }
+    },
+    "theme.displayName.goldenHearth" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Golden Hearth"
+          }
+        }
+      }
+    },
+    "theme.displayName.seaCottage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sea Cottage"
+          }
+        }
+      }
+    },
+    "theme.displayName.yarnCandy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yarn Candy"
+          }
+        }
+      }
+    },
+    "Toggles whether this project is finished" : {
+
+    },
+    "Total Rows" : {
+
+    },
+    "You have unsaved changes. Are you sure you want to discard them?" : {
+
+    }
+  },
+  "version" : "1.0"
+}

@@ -1,17 +1,187 @@
 import SwiftUI
 import UniformTypeIdentifiers
+import UIKit
 
-private let privacyPolicyURL = URL(string: "https://harrisonsoftware.dev/stitch-counter/privacy-policy")!
-private let bugReportEmail = "support@harrisonsoftware.dev"
+enum SettingsActionColorStyle {
+    case primary
+    case secondary
+    case tertiary
+
+    func backgroundColor(using themeColors: ThemeColors) -> Color {
+        switch self {
+        case .primary: return themeColors.primary
+        case .secondary: return themeColors.secondary
+        case .tertiary: return themeColors.tertiary
+        }
+    }
+
+    func foregroundColor(using themeColors: ThemeColors) -> Color {
+        switch self {
+        case .primary: return themeColors.onPrimary
+        case .secondary: return themeColors.onSecondary
+        case .tertiary: return themeColors.onTertiary
+        }
+    }
+}
+
+protocol SettingsActionOption: CaseIterable, Identifiable, Hashable {
+    var titleLocalizationKey: String { get }
+    var systemImage: String { get }
+    var accessibilityHintLocalizationKey: String { get }
+    var colorStyle: SettingsActionColorStyle { get }
+}
+
+extension SettingsActionOption where Self: Hashable {
+    var id: Self { self }
+
+    func backgroundColor(_ themeColors: ThemeColors) -> Color {
+        colorStyle.backgroundColor(using: themeColors)
+    }
+
+    func foregroundColor(_ themeColors: ThemeColors) -> Color {
+        colorStyle.foregroundColor(using: themeColors)
+    }
+}
+
+enum BackupRestoreOption: CaseIterable {
+    case export
+    case importLibrary
+
+    var systemImage: String {
+        switch self {
+        case .export: return "square.and.arrow.up"
+        case .importLibrary: return "square.and.arrow.down"
+        }
+    }
+
+    var accessibilityHintLocalizationKey: String {
+        switch self {
+        case .export: return "settings.backup.export.hint"
+        case .importLibrary: return "settings.backup.import.hint"
+        }
+    }
+
+    var titleLocalizationKey: String {
+        switch self {
+        case .export: return "settings.backup.export.title"
+        case .importLibrary: return "settings.backup.import.title"
+        }
+    }
+
+    var colorStyle: SettingsActionColorStyle {
+        switch self {
+        case .export: return .primary
+        case .importLibrary: return .secondary
+        }
+    }
+
+    func displayTitleLocalizationKey(isExporting: Bool, isImporting: Bool) -> String {
+        switch self {
+        case .export: return isExporting ? "settings.backup.exporting.title" : titleLocalizationKey
+        case .importLibrary: return isImporting ? "settings.backup.importing.title" : titleLocalizationKey
+        }
+    }
+
+    func errorLocalizationKey(exportErrorKey: String?, importErrorKey: String?) -> String? {
+        switch self {
+        case .export: return exportErrorKey
+        case .importLibrary: return importErrorKey
+        }
+    }
+}
+
+extension BackupRestoreOption: SettingsActionOption {}
+
+enum SupportOption: CaseIterable {
+    case reportBug
+    case giveFeedback
+    case requestFeature
+
+    var titleLocalizationKey: String {
+        switch self {
+        case .reportBug: return "settings.support.reportBug.title"
+        case .giveFeedback: return "settings.support.giveFeedback.title"
+        case .requestFeature: return "settings.support.requestFeature.title"
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .reportBug: return "ladybug"
+        case .giveFeedback: return "envelope"
+        case .requestFeature: return "wand.and.stars"
+        }
+    }
+
+    var accessibilityHintLocalizationKey: String {
+        switch self {
+        case .reportBug: return "settings.support.reportBug.hint"
+        case .giveFeedback: return "settings.support.giveFeedback.hint"
+        case .requestFeature: return "settings.support.requestFeature.hint"
+        }
+    }
+
+    var colorStyle: SettingsActionColorStyle {
+        switch self {
+        case .reportBug: return .primary
+        case .giveFeedback: return .secondary
+        case .requestFeature: return .tertiary
+        }
+    }
+}
+
+extension SupportOption: SettingsActionOption {}
+
+enum PrivacyAndLegalOption: CaseIterable {
+    case privacyPolicy
+    case eula
+
+    var titleLocalizationKey: String {
+        switch self {
+        case .privacyPolicy: return "settings.legal.privacyPolicy.title"
+        case .eula: return "settings.legal.eula.title"
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .privacyPolicy: return "hand.raised"
+        case .eula: return "doc.text"
+        }
+    }
+
+    var accessibilityHintLocalizationKey: String {
+        switch self {
+        case .privacyPolicy: return "settings.legal.privacyPolicy.hint"
+        case .eula: return "settings.legal.eula.hint"
+        }
+    }
+
+    var colorStyle: SettingsActionColorStyle {
+        switch self {
+        case .privacyPolicy: return .primary
+        case .eula: return .secondary
+        }
+    }
+}
+
+extension PrivacyAndLegalOption: SettingsActionOption {}
 
 struct SettingsScreen: View {
     @ObservedObject var viewModel: SettingsViewModel
 
-    @State private var isThemeSectionExpanded = true
-    @State private var isBackupSectionExpanded = true
+    @State private var isThemeSectionExpanded = false
+    @State private var isBackupSectionExpanded = false
+    @State private var isSupportSectionExpanded = false
+    @State private var isLegalSectionExpanded = false
     @State private var showImportPicker = false
     @State private var showExportShare = false
+    @State private var showMailUnavailableAlert = false
+    @State private var pendingSupportSubject = ""
     @State private var exportURL: URL?
+    @State private var showBugReportOptions = false
+    @State private var bugReportIncludeDiagnostics = true
+    @State private var showImportSummary = false
 
     @Environment(\.themeColors) private var colors
     @Environment(\.openURL) private var openURL
@@ -22,29 +192,114 @@ struct SettingsScreen: View {
                 themeSection
                 backupSection
                 supportSection
+                privacyAndLegalSection
             }
             .listStyle(.insetGrouped)
-            .navigationTitle("Settings")
+            .navigationTitle("settings.title")
         }
         .fileImporter(
             isPresented: $showImportPicker,
-            allowedContentTypes: [UTType.json],
+            allowedContentTypes: [UTType.zip],
             onCompletion: handleImport
         )
-        .sheet(isPresented: $showExportShare) {
+        .sheet(isPresented: $showExportShare, onDismiss: {
+            viewModel.clearExportStatus()
+        }) {
             if let url = exportURL {
                 ShareSheet(activityItems: [url])
             }
         }
-        .alert("Import Complete", isPresented: $viewModel.importSuccess) {
-            Button("OK") {
+        .sheet(item: $viewModel.mailComposePayload) { payload in
+            MailComposeView(
+                recipients: payload.recipients,
+                subject: payload.subject,
+                body: payload.body,
+                attachmentData: payload.attachmentData,
+                attachmentMimeType: payload.attachmentMimeType,
+                attachmentFileName: payload.attachmentFileName
+            )
+            .onDisappear {
+                viewModel.dismissMailComposer()
+            }
+        }
+        .sheet(isPresented: $showBugReportOptions) {
+            bugReportOptionsSheet
+        }
+        .onChange(of: viewModel.importSuccess) { _, success in
+            if success {
+                showImportSummary = true
+            }
+        }
+        .alert("settings.import.complete.title", isPresented: $showImportSummary) {
+            Button("common.ok") {
                 viewModel.clearImportStatus()
             }
         } message: {
-            VStack {
-                Text("Imported \(viewModel.importedCount) project(s)")
-                if viewModel.failedCount > 0 {
-                    Text("Failed to import \(viewModel.failedCount) project(s)")
+            importSummaryMessage
+        }
+        .alert("settings.support.mailUnavailable.title", isPresented: $showMailUnavailableAlert) {
+            Button("settings.support.mailUnavailable.copyEmail") {
+                UIPasteboard.general.string = AppConstants.supportEmail
+            }
+            Button("common.ok", role: .cancel) {}
+        } message: {
+            Text(
+                String(
+                    format: String(localized: "settings.support.mailUnavailable.message"),
+                    AppConstants.supportEmail,
+                    pendingSupportSubject
+                )
+            )
+        }
+    }
+
+    private var bugReportOptionsSheet: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    Text("settings.bugReport.dialogMessage")
+                    Toggle("settings.bugReport.includeDiagnostics", isOn: $bugReportIncludeDiagnostics)
+                }
+                Section {
+                    Button("settings.bugReport.send") {
+                        showBugReportOptions = false
+                        viewModel.onLaunchingExternalActivity()
+                        sendBugReportFlow(includeDiagnostics: bugReportIncludeDiagnostics)
+                    }
+                    Button("common.cancel", role: .cancel) {
+                        showBugReportOptions = false
+                    }
+                }
+            }
+            .navigationTitle("settings.bugReport.dialogTitle")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+        .presentationDetents([.medium])
+    }
+
+    @ViewBuilder
+    private var importSummaryMessage: some View {
+        if let result = viewModel.importResult {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(
+                    String(
+                        format: String(localized: "settings.import.complete.importedCount"),
+                        Int64(result.importedCount)
+                    )
+                )
+                if result.failedCount > 0 {
+                    Text(
+                        String(
+                            format: String(localized: "settings.import.complete.failedCount"),
+                            Int64(result.failedCount)
+                        )
+                    )
+                    .foregroundColor(colors.error)
+                    if !result.failedProjectNames.isEmpty {
+                        Text(result.failedProjectNames.joined(separator: "\n"))
+                            .font(.caption)
+                            .foregroundStyle(colors.onSurface.opacity(0.8))
+                    }
                 }
             }
         }
@@ -55,6 +310,11 @@ struct SettingsScreen: View {
     private var themeSection: some View {
         Section {
             DisclosureGroup(isExpanded: $isThemeSectionExpanded) {
+                Text("settings.theme.chooseScheme")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.top, 4)
                 ForEach(AppTheme.allCases) { theme in
                     ThemeOptionRow(
                         theme: theme,
@@ -63,9 +323,11 @@ struct SettingsScreen: View {
                     )
                 }
             } label: {
-                Label("Theme Settings", systemImage: "paintpalette")
+                Label("settings.theme.sectionTitle", systemImage: "paintpalette")
                     .font(.headline)
             }
+            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 
@@ -74,54 +336,45 @@ struct SettingsScreen: View {
     private var backupSection: some View {
         Section {
             DisclosureGroup(isExpanded: $isBackupSectionExpanded) {
-                VStack(spacing: 12) {
-                    Button {
-                        exportLibrary()
-                    } label: {
-                        HStack {
-                            Image(systemName: "square.and.arrow.up")
-                            Text(viewModel.isExporting ? "Exporting..." : "Export Library")
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("settings.backup.exportImportTitle")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                    ForEach(BackupRestoreOption.allCases) { option in
+                        SettingsActionButton(
+                            titleLocalizationKey: option.displayTitleLocalizationKey(
+                                isExporting: viewModel.isExporting,
+                                isImporting: viewModel.isImporting
+                            ),
+                            systemImage: option.systemImage,
+                            backgroundColor: option.backgroundColor(colors),
+                            foregroundColor: option.foregroundColor(colors),
+                            accessibilityHintLocalizationKey: option.accessibilityHintLocalizationKey,
+                            isDisabled: viewModel.isExporting || viewModel.isImporting
+                        ) {
+                            handleBackupAction(option)
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
-                        .background(colors.primary)
-                        .foregroundColor(colors.onPrimary)
-                        .cornerRadius(8)
-                    }
-                    .disabled(viewModel.isExporting || viewModel.isImporting)
 
-                    if let error = viewModel.exportError {
-                        Text("Error: \(error)")
-                            .font(.caption)
-                            .foregroundColor(colors.error)
-                    }
-
-                    Button {
-                        showImportPicker = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "square.and.arrow.down")
-                            Text(viewModel.isImporting ? "Importing..." : "Import Library")
+                        if let errorKey = option.errorLocalizationKey(
+                            exportErrorKey: viewModel.exportErrorLocalizationKey,
+                            importErrorKey: viewModel.importErrorLocalizationKey
+                        ) {
+                            Text(LocalizedStringKey(errorKey))
+                                .font(.caption)
+                                .foregroundColor(colors.error)
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
-                        .background(colors.secondary)
-                        .foregroundColor(colors.onSecondary)
-                        .cornerRadius(8)
                     }
-                    .disabled(viewModel.isExporting || viewModel.isImporting)
-
-                    if let error = viewModel.importError {
-                        Text("Error: \(error)")
-                            .font(.caption)
-                            .foregroundColor(colors.error)
-                    }
+                    Text("settings.backup.localNote")
+                        .font(.caption)
+                        .foregroundColor(colors.onSurface.opacity(0.7))
                 }
-                .padding(.vertical, 8)
+                .padding(.vertical, 16)
             } label: {
-                Label("Backup & Restore", systemImage: "externaldrive")
+                Label("settings.backup.sectionTitle", systemImage: "externaldrive")
                     .font(.headline)
             }
+            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 
@@ -129,27 +382,66 @@ struct SettingsScreen: View {
 
     private var supportSection: some View {
         Section {
-            Button {
-                if let mailURL = URL(string: "mailto:\(bugReportEmail)?subject=Stitch%20Counter%20Bug%20Report") {
-                    openURL(mailURL)
+            DisclosureGroup(isExpanded: $isSupportSectionExpanded) {
+                VStack(spacing: 12) {
+                    ForEach(SupportOption.allCases) { option in
+                        SettingsActionButton(
+                            titleLocalizationKey: option.titleLocalizationKey,
+                            systemImage: option.systemImage,
+                            backgroundColor: option.backgroundColor(colors),
+                            foregroundColor: option.foregroundColor(colors),
+                            accessibilityHintLocalizationKey: option.accessibilityHintLocalizationKey
+                        ) {
+                            handleSupportAction(option)
+                        }
+                    }
                 }
+                .padding(.vertical, 16)
             } label: {
-                Label("Report a Bug", systemImage: "ladybug")
+                Label("settings.support.sectionTitle", systemImage: "questionmark.circle")
+                    .font(.headline)
+                    .accessibilityLabel("settings.support.sectionAccessibilityLabel")
+                    .accessibilityHint("settings.support.sectionAccessibilityHint")
             }
+            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
 
-            Button {
-                openURL(privacyPolicyURL)
+    // MARK: - Privacy & Legal
+
+    private var privacyAndLegalSection: some View {
+        Section {
+            DisclosureGroup(isExpanded: $isLegalSectionExpanded) {
+                VStack(spacing: 12) {
+                    ForEach(PrivacyAndLegalOption.allCases) { option in
+                        SettingsActionButton(
+                            titleLocalizationKey: option.titleLocalizationKey,
+                            systemImage: option.systemImage,
+                            backgroundColor: option.backgroundColor(colors),
+                            foregroundColor: option.foregroundColor(colors),
+                            accessibilityHintLocalizationKey: option.accessibilityHintLocalizationKey
+                        ) {
+                            handleLegalAction(option)
+                        }
+                    }
+                }
+                .padding(.vertical, 16)
             } label: {
-                Label("Privacy Policy", systemImage: "hand.raised")
+                Label("settings.legal.sectionTitle", systemImage: "checkmark.shield")
+                    .font(.headline)
+                    .accessibilityLabel("settings.legal.sectionAccessibilityLabel")
+                    .accessibilityHint("settings.legal.sectionAccessibilityHint")
             }
-        } header: {
-            Text("Support")
+            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 
     // MARK: - Helpers
 
     private func exportLibrary() {
+        viewModel.onLaunchingExternalActivity()
         Task {
             if let url = await viewModel.exportLibrary() {
                 exportURL = url
@@ -168,8 +460,131 @@ struct SettingsScreen: View {
                 await viewModel.importLibrary(from: url)
             }
         case .failure(let error):
-            viewModel.importError = error.localizedDescription
+            print("[SettingsScreen] event=import_picker_failed error=\(error.localizedDescription)")
         }
+    }
+
+    private func handleBackupAction(_ option: BackupRestoreOption) {
+        switch option {
+        case .export:
+            exportLibrary()
+        case .importLibrary:
+            viewModel.onLaunchingExternalActivity()
+            showImportPicker = true
+        }
+    }
+
+    private func handleSupportAction(_ option: SupportOption) {
+        switch option {
+        case .reportBug:
+            bugReportIncludeDiagnostics = true
+            showBugReportOptions = true
+        case .giveFeedback:
+            viewModel.onLaunchingExternalActivity()
+            sendFeedbackFlow()
+        case .requestFeature:
+            viewModel.onLaunchingExternalActivity()
+            sendFeatureRequestFlow()
+        }
+    }
+
+    private func sendBugReportFlow(includeDiagnostics: Bool) {
+        if let payload = viewModel.makeBugReportMailPayload(includeDiagnostics: includeDiagnostics) {
+            viewModel.mailComposePayload = payload
+            return
+        }
+        if let url = viewModel.mailtoURLForBugReport(includeDiagnostics: includeDiagnostics) {
+            openSupportEmailURL(url, subject: AppConstants.bugReportSubject)
+        } else {
+            pendingSupportSubject = AppConstants.bugReportSubject
+            showMailUnavailableAlert = true
+        }
+    }
+
+    private func sendFeedbackFlow() {
+        if let payload = viewModel.makeGiveFeedbackMailPayload() {
+            viewModel.mailComposePayload = payload
+            return
+        }
+        if let url = viewModel.mailtoURLForFeedback() {
+            openSupportEmailURL(url, subject: AppConstants.feedbackSubject)
+        } else {
+            pendingSupportSubject = AppConstants.feedbackSubject
+            showMailUnavailableAlert = true
+        }
+    }
+
+    private func sendFeatureRequestFlow() {
+        if let payload = viewModel.makeFeatureRequestMailPayload() {
+            viewModel.mailComposePayload = payload
+            return
+        }
+        if let url = viewModel.mailtoURLForFeatureRequest() {
+            openSupportEmailURL(url, subject: AppConstants.featureRequestSubject)
+        } else {
+            pendingSupportSubject = AppConstants.featureRequestSubject
+            showMailUnavailableAlert = true
+        }
+    }
+
+    private func handleLegalAction(_ option: PrivacyAndLegalOption) {
+        switch option {
+        case .privacyPolicy: openDestinationURL(viewModel.onOpenPrivacyPolicy())
+        case .eula: openDestinationURL(viewModel.onOpenEULA())
+        }
+    }
+
+    private func openDestinationURL(_ destinationURL: URL?) {
+        guard let destinationURL else { return }
+        openURL(destinationURL) { accepted in
+            if !accepted {
+                UIApplication.shared.open(destinationURL)
+            }
+        }
+    }
+
+    private func openSupportEmailURL(_ destinationURL: URL?, subject: String) {
+        guard let destinationURL else { return }
+        openURL(destinationURL) { accepted in
+            if !accepted {
+                UIApplication.shared.open(destinationURL) { didOpen in
+                    if !didOpen {
+                        print("[SettingsScreen] Unable to open support mailto URL: \(destinationURL.absoluteString)")
+                        pendingSupportSubject = subject
+                        showMailUnavailableAlert = true
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct SettingsActionButton: View {
+    let titleLocalizationKey: String
+    let systemImage: String
+    let backgroundColor: Color
+    let foregroundColor: Color
+    let accessibilityHintLocalizationKey: String
+    var isDisabled: Bool = false
+    let onTap: () -> Void
+
+    var body: some View {
+        Button(action: onTap) {
+            HStack {
+                Image(systemName: systemImage)
+                Text(LocalizedStringKey(titleLocalizationKey))
+            }
+            .frame(maxWidth: .infinity, minHeight: 44)
+            .padding(.vertical, 12)
+            .background(backgroundColor)
+            .foregroundColor(foregroundColor)
+            .cornerRadius(8)
+            .contentShape(Rectangle())
+        }
+        .disabled(isDisabled)
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(LocalizedStringKey(titleLocalizationKey)))
+        .accessibilityHint(Text(LocalizedStringKey(accessibilityHintLocalizationKey)))
     }
 }
 
@@ -187,40 +602,85 @@ struct ThemeOptionRow: View {
         Button {
             onSelect()
         } label: {
-            HStack(spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
                 ThemeIconPreview(theme: theme, isDark: colorScheme == .dark, isSelected: isSelected)
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(theme.displayName)
-                        .font(.body)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(LocalizedStringKey(theme.displayNameLocalizationKey))
+                        .font(.title3)
+                        .fontWeight(.semibold)
                         .foregroundColor(colors.onSurface)
 
                     if isSelected {
-                        themeColorPreviews
+                        Text("settings.theme.colorsInTheme")
+                            .font(.subheadline)
+                            .foregroundColor(colors.onSurface.opacity(0.7))
+                        ForEach(ThemeManager.displaySwatches(for: theme)) { swatch in
+                            ThemeDisplaySwatchRow(swatch: swatch)
+                        }
                     }
                 }
 
-                Spacer()
+                Spacer(minLength: 8)
 
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.title2)
                     .foregroundColor(isSelected ? colors.primary : colors.onSurface.opacity(0.4))
+                    .padding(.top, 4)
             }
             .padding(.vertical, 8)
+            .padding(.horizontal, 4)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(isSelected ? colors.primaryContainer.opacity(0.35) : Color.clear)
+            )
         }
-        .accessibilityLabel("\(theme.displayName) theme")
-        .accessibilityHint(isSelected ? "Currently selected" : "Double tap to select")
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(LocalizedStringKey(theme.displayNameLocalizationKey)))
+        .accessibilityHint(
+            Text(
+                isSelected
+                    ? String(localized: "settings.theme.option.accessibilityHint.selected")
+                    : String(localized: "settings.theme.option.accessibilityHint.select")
+            )
+        )
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
+}
 
-    private var themeColorPreviews: some View {
-        let previewColors = ThemeManager.colors(for: theme, isDark: colorScheme == .dark)
-        return HStack(spacing: 8) {
-            Circle().fill(previewColors.primary).frame(width: 20, height: 20)
-            Circle().fill(previewColors.secondary).frame(width: 20, height: 20)
-            Circle().fill(previewColors.tertiary).frame(width: 20, height: 20)
-            Circle().fill(previewColors.quaternary).frame(width: 20, height: 20)
+struct ThemeDisplaySwatchRow: View {
+    let swatch: ThemeDisplaySwatch
+
+    @Environment(\.themeColors) private var colors
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Circle()
+                .fill(swatch.light)
+                .frame(width: 24, height: 24)
+                .accessibilityHidden(true)
+            Text(swatch.name)
+                .font(.caption)
+                .foregroundColor(colors.onSurface.opacity(0.75))
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Circle()
+                .fill(swatch.dark)
+                .frame(width: 24, height: 24)
+                .accessibilityHidden(true)
+            Text("settings.theme.dark")
+                .font(.caption)
+                .foregroundColor(colors.onSurface.opacity(0.75))
         }
-        .accessibilityHidden(true)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(
+            Text(
+                String(
+                    format: String(localized: "settings.theme.swatchRowA11y"),
+                    swatch.name
+                )
+            )
+        )
     }
 }
 
