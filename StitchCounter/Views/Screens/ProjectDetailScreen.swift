@@ -11,6 +11,7 @@ struct ProjectDetailScreen: View {
     @State private var showDiscardDialog = false
     @State private var showImagePreview = false
     @State private var imagePreviewStartIndex = 0
+    @State private var suppressScrollForPhotoReorder = false
     @Environment(\.themeColors) private var colors
     @FocusState private var focusedField: Field?
     
@@ -59,6 +60,8 @@ struct ProjectDetailScreen: View {
                         imagePathForDisplay: { viewModel.resolvedImagePathForDisplay($0) },
                         onAddImage: { viewModel.addImage($0) },
                         onRemoveImage: { viewModel.removeImagePath($0) },
+                        onApplyImagePathsOrder: { viewModel.applyImagePathsOrder($0) },
+                        onReorderDragActiveChange: { suppressScrollForPhotoReorder = $0 },
                         onOpenPreview: { index in
                             imagePreviewStartIndex = index
                             showImagePreview = true
@@ -87,6 +90,7 @@ struct ProjectDetailScreen: View {
                 }
                 .padding(24)
             }
+            .scrollDisabled(suppressScrollForPhotoReorder)
             .scrollDismissesKeyboard(.interactively)
             .navigationTitle(String(localized: "project.detail.navTitle"))
             .navigationBarTitleDisplayMode(.inline)

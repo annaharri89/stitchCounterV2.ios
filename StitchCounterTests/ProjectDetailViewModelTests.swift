@@ -87,4 +87,96 @@ final class ProjectDetailViewModelTests: XCTestCase {
         XCTAssertNil(newId)
         XCTAssertNotNil(viewModel.totalRowsError)
     }
+    
+    func testReorderImagePathsMovesDraggedItemBeforeDropTargetIndex() {
+        let viewModel = createViewModel()
+        let existing = Project(
+            type: .single,
+            title: "With photos",
+            imagePaths: ["a.jpg", "b.jpg", "c.jpg", "d.jpg"]
+        )
+        mockService.addProject(existing)
+        viewModel.loadProjectById(existing.id)
+        
+        viewModel.reorderImagePaths(draggedPath: "a.jpg", dropTargetPath: "c.jpg")
+        
+        XCTAssertEqual(viewModel.imagePaths, ["b.jpg", "c.jpg", "a.jpg", "d.jpg"])
+    }
+    
+    func testReorderImagePathsMovesItemToStart() {
+        let viewModel = createViewModel()
+        let existing = Project(
+            type: .single,
+            title: "With photos",
+            imagePaths: ["a.jpg", "b.jpg", "c.jpg"]
+        )
+        mockService.addProject(existing)
+        viewModel.loadProjectById(existing.id)
+        
+        viewModel.reorderImagePaths(draggedPath: "c.jpg", dropTargetPath: "a.jpg")
+        
+        XCTAssertEqual(viewModel.imagePaths, ["c.jpg", "a.jpg", "b.jpg"])
+    }
+    
+    func testReorderImagePathsNoOpWhenPathsAreSameOrUnknown() {
+        let viewModel = createViewModel()
+        let existing = Project(
+            type: .single,
+            title: "With photos",
+            imagePaths: ["a.jpg", "b.jpg"]
+        )
+        mockService.addProject(existing)
+        viewModel.loadProjectById(existing.id)
+        
+        viewModel.reorderImagePaths(draggedPath: "a.jpg", dropTargetPath: "a.jpg")
+        XCTAssertEqual(viewModel.imagePaths, ["a.jpg", "b.jpg"])
+        
+        viewModel.reorderImagePaths(draggedPath: "missing.jpg", dropTargetPath: "a.jpg")
+        XCTAssertEqual(viewModel.imagePaths, ["a.jpg", "b.jpg"])
+    }
+    
+    func testApplyImagePathsOrderUpdatesWhenValidPermutation() {
+        let viewModel = createViewModel()
+        let existing = Project(
+            type: .single,
+            title: "Photos",
+            imagePaths: ["x.jpg", "y.jpg", "z.jpg"]
+        )
+        mockService.addProject(existing)
+        viewModel.loadProjectById(existing.id)
+        
+        viewModel.applyImagePathsOrder(["z.jpg", "x.jpg", "y.jpg"])
+        
+        XCTAssertEqual(viewModel.imagePaths, ["z.jpg", "x.jpg", "y.jpg"])
+    }
+    
+    func testApplyImagePathsOrderRejectedWhenCountMismatches() {
+        let viewModel = createViewModel()
+        let existing = Project(
+            type: .single,
+            title: "Photos",
+            imagePaths: ["a.jpg", "b.jpg"]
+        )
+        mockService.addProject(existing)
+        viewModel.loadProjectById(existing.id)
+        
+        viewModel.applyImagePathsOrder(["a.jpg"])
+        
+        XCTAssertEqual(viewModel.imagePaths, ["a.jpg", "b.jpg"])
+    }
+    
+    func testApplyImagePathsOrderRejectedWhenNotPermutation() {
+        let viewModel = createViewModel()
+        let existing = Project(
+            type: .single,
+            title: "Photos",
+            imagePaths: ["a.jpg", "b.jpg"]
+        )
+        mockService.addProject(existing)
+        viewModel.loadProjectById(existing.id)
+        
+        viewModel.applyImagePathsOrder(["a.jpg", "c.jpg"])
+        
+        XCTAssertEqual(viewModel.imagePaths, ["a.jpg", "b.jpg"])
+    }
 }

@@ -277,6 +277,28 @@ final class ProjectDetailViewModel: ObservableObject {
         triggerAutoSave()
     }
     
+    func reorderImagePaths(draggedPath: String, dropTargetPath: String) {
+        guard draggedPath != dropTargetPath,
+              let fromIndex = imagePaths.firstIndex(of: draggedPath),
+              let toIndex = imagePaths.firstIndex(of: dropTargetPath) else { return }
+        var paths = imagePaths
+        let moved = paths.remove(at: fromIndex)
+        paths.insert(moved, at: toIndex)
+        imagePaths = paths
+        recalculateHasUnsavedChanges()
+        triggerAutoSave()
+    }
+    
+    func applyImagePathsOrder(_ newOrder: [String]) {
+        guard newOrder.count == imagePaths.count else { return }
+        let oldFrequency = Dictionary(grouping: imagePaths, by: { $0 }).mapValues { $0.count }
+        let newFrequency = Dictionary(grouping: newOrder, by: { $0 }).mapValues { $0.count }
+        guard oldFrequency == newFrequency else { return }
+        imagePaths = newOrder
+        recalculateHasUnsavedChanges()
+        triggerAutoSave()
+    }
+    
     func createProject() -> UUID? {
         guard !title.trimmingCharacters(in: .whitespaces).isEmpty else {
             titleError = String(localized: "project.validation.titleRequired")
