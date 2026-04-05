@@ -258,22 +258,52 @@ struct SettingsScreen: View {
             Form {
                 Section {
                     Text("settings.bugReport.dialogMessage")
+                        .foregroundStyle(colors.onSurface)
                     Toggle("settings.bugReport.includeDiagnostics", isOn: $bugReportIncludeDiagnostics)
+                        .tint(colors.primary)
                 }
                 Section {
-                    Button("settings.bugReport.send") {
-                        showBugReportOptions = false
-                        viewModel.onLaunchingExternalActivity()
-                        sendBugReportFlow(includeDiagnostics: bugReportIncludeDiagnostics)
+                    HStack(spacing: 0) {
+                        Button(role: .cancel) {
+                            showBugReportOptions = false
+                        } label: {
+                            Text("common.cancel")
+                                .foregroundStyle(colors.onSurface.opacity(0.65))
+                                .frame(maxWidth: .infinity, minHeight: 44)
+                                .multilineTextAlignment(.center)
+                        }
+                        .buttonStyle(.borderless)
+                        .frame(maxWidth: .infinity)
+                        .contentShape(Rectangle())
+                        Divider()
+                            .frame(maxHeight: 32)
+                        Button {
+                            showBugReportOptions = false
+                            viewModel.onLaunchingExternalActivity()
+                            sendBugReportFlow(includeDiagnostics: bugReportIncludeDiagnostics)
+                        } label: {
+                            Text("settings.bugReport.send")
+                                .fontWeight(.semibold)
+                                .foregroundStyle(colors.primary)
+                                .frame(maxWidth: .infinity, minHeight: 44)
+                                .multilineTextAlignment(.center)
+                        }
+                        .buttonStyle(.borderless)
+                        .frame(maxWidth: .infinity)
+                        .contentShape(Rectangle())
                     }
-                    Button("common.cancel", role: .cancel) {
-                        showBugReportOptions = false
-                    }
+                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(colors.background)
             .navigationTitle("settings.bugReport.dialogTitle")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(colors.background, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
         }
+        .tint(Color.primary)
+        .presentationBackground(colors.background)
         .presentationDetents([.medium])
     }
 
