@@ -7,6 +7,8 @@ struct ProjectDetailScreen: View {
     private let beganAsNewProjectSheet: Bool
     let onDismiss: () -> Void
     let onNavigateBack: ((UUID) -> Void)?
+    /// Called after a new project is successfully created from the draft sheet (e.g. navigate to counter).
+    let onProjectCreated: ((UUID) -> Void)?
     
     @State private var showDiscardDialog = false
     @State private var showImagePreview = false
@@ -25,7 +27,8 @@ struct ProjectDetailScreen: View {
         projectId: UUID?,
         projectType: ProjectType?,
         onDismiss: @escaping () -> Void,
-        onNavigateBack: ((UUID) -> Void)? = nil
+        onNavigateBack: ((UUID) -> Void)? = nil,
+        onProjectCreated: ((UUID) -> Void)? = nil
     ) {
         self.viewModel = viewModel
         self.projectId = projectId
@@ -33,6 +36,7 @@ struct ProjectDetailScreen: View {
         self.beganAsNewProjectSheet = projectId == nil
         self.onDismiss = onDismiss
         self.onNavigateBack = onNavigateBack
+        self.onProjectCreated = onProjectCreated
     }
     
     private var showsDraftChrome: Bool {
@@ -117,7 +121,9 @@ struct ProjectDetailScreen: View {
             .safeAreaInset(edge: .bottom) {
                 if showsDraftChrome {
                     Button {
-                        _ = viewModel.createProject()
+                        if let newId = viewModel.createProject() {
+                            onProjectCreated?(newId)
+                        }
                     } label: {
                         Text(String(localized: "Create Project"))
                             .font(.headline)

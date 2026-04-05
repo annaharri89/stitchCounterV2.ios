@@ -56,6 +56,7 @@
 		A2000006001 /* LibraryBackupCodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000006000 /* LibraryBackupCodableTests.swift */; };
 		A2000007001 /* LibraryBackupZipEligibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000007000 /* LibraryBackupZipEligibilityTests.swift */; };
 		A2000008001 /* ProjectDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000008000 /* ProjectDetailViewModelTests.swift */; };
+		A2000009001 /* AppCoordinatorNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000009000 /* AppCoordinatorNavigationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -120,6 +121,7 @@
 		A2000006000 /* LibraryBackupCodableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryBackupCodableTests.swift; sourceTree = "<group>"; };
 		A2000007000 /* LibraryBackupZipEligibilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryBackupZipEligibilityTests.swift; sourceTree = "<group>"; };
 		A2000008000 /* ProjectDetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewModelTests.swift; sourceTree = "<group>"; };
+		A2000009000 /* AppCoordinatorNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinatorNavigationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -289,6 +291,7 @@
 				A2000006000 /* LibraryBackupCodableTests.swift */,
 				A2000007000 /* LibraryBackupZipEligibilityTests.swift */,
 				A2000008000 /* ProjectDetailViewModelTests.swift */,
+				A2000009000 /* AppCoordinatorNavigationTests.swift */,
 			);
 			path = StitchCounterTests;
 			sourceTree = "<group>";
@@ -445,6 +448,7 @@
 				A2000006001 /* LibraryBackupCodableTests.swift in Sources */,
 				A2000007001 /* LibraryBackupZipEligibilityTests.swift in Sources */,
 				A2000008001 /* ProjectDetailViewModelTests.swift in Sources */,
+				A2000009001 /* AppCoordinatorNavigationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
