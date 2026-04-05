@@ -70,18 +70,21 @@ final class AppCoordinator: ObservableObject {
 
 enum TabItem: String, CaseIterable {
     case library
+    case stats
     case settings
     
     var title: String {
         switch self {
-        case .library: return "Library"
-        case .settings: return "Settings"
+        case .library: return String(localized: "nav.library")
+        case .stats: return String(localized: "nav.stats")
+        case .settings: return String(localized: "nav.settings")
         }
     }
     
     var icon: String {
         switch self {
         case .library: return "list.bullet"
+        case .stats: return "chart.bar.fill"
         case .settings: return "gearshape"
         }
     }

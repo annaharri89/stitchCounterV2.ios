@@ -17,7 +17,13 @@ struct ContentView: View {
                 Label(TabItem.library.title, systemImage: TabItem.library.icon)
             }
             .tag(TabItem.library)
-            
+
+            StatsScreen()
+                .tabItem {
+                    Label(TabItem.stats.title, systemImage: TabItem.stats.icon)
+                }
+                .tag(TabItem.stats)
+
             SettingsScreen(viewModel: coordinator.settingsViewModel)
                 .tabItem {
                     Label(TabItem.settings.title, systemImage: TabItem.settings.icon)
@@ -75,9 +81,7 @@ struct ContentView: View {
                 projectType: projectType,
                 onDismiss: {
                     coordinator.dismissSheet()
-                },
-                onProjectCreated: { newProjectId in
-                    coordinator.navigateToCounterAfterCreation(projectId: newProjectId, projectType: projectType)
+                    coordinator.libraryViewModel.refreshProjects()
                 }
             )
             

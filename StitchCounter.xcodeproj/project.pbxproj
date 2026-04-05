@@ -33,10 +33,12 @@
 		A1000023001 /* DeleteConfirmationDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000023000 /* DeleteConfirmationDialog.swift */; };
 		A1000024001 /* BottomActionButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000024000 /* BottomActionButtonsView.swift */; };
 		A1000025001 /* ProjectImageSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000025000 /* ProjectImageSelectorView.swift */; };
+		A1000040301 /* ProjectImagePreviewSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000040300 /* ProjectImagePreviewSheet.swift */; };
 		A1000026001 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000026000 /* HomeScreen.swift */; };
 		A1000027001 /* SingleCounterScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000027000 /* SingleCounterScreen.swift */; };
 		A1000028001 /* DoubleCounterScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000028000 /* DoubleCounterScreen.swift */; };
 		A1000029001 /* LibraryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000029000 /* LibraryScreen.swift */; };
+		A1000029501 /* StatsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000029500 /* StatsScreen.swift */; };
 		A1000030001 /* ProjectDetailScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000030000 /* ProjectDetailScreen.swift */; };
 		A1000031001 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000031000 /* SettingsScreen.swift */; };
 		A1000032001 /* SheetDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000032000 /* SheetDestination.swift */; };
@@ -92,10 +94,12 @@
 		A1000023000 /* DeleteConfirmationDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteConfirmationDialog.swift; sourceTree = "<group>"; };
 		A1000024000 /* BottomActionButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomActionButtonsView.swift; sourceTree = "<group>"; };
 		A1000025000 /* ProjectImageSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectImageSelectorView.swift; sourceTree = "<group>"; };
+		A1000040300 /* ProjectImagePreviewSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectImagePreviewSheet.swift; sourceTree = "<group>"; };
 		A1000026000 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		A1000027000 /* SingleCounterScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleCounterScreen.swift; sourceTree = "<group>"; };
 		A1000028000 /* DoubleCounterScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleCounterScreen.swift; sourceTree = "<group>"; };
 		A1000029000 /* LibraryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryScreen.swift; sourceTree = "<group>"; };
+		A1000029500 /* StatsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsScreen.swift; sourceTree = "<group>"; };
 		A1000030000 /* ProjectDetailScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailScreen.swift; sourceTree = "<group>"; };
 		A1000031000 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
 		A1000032000 /* SheetDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetDestination.swift; sourceTree = "<group>"; };
@@ -246,6 +250,7 @@
 				A1000027000 /* SingleCounterScreen.swift */,
 				A1000028000 /* DoubleCounterScreen.swift */,
 				A1000029000 /* LibraryScreen.swift */,
+				A1000029500 /* StatsScreen.swift */,
 				A1000030000 /* ProjectDetailScreen.swift */,
 				A1000031000 /* SettingsScreen.swift */,
 			);
@@ -411,10 +416,12 @@
 				A1000023001 /* DeleteConfirmationDialog.swift in Sources */,
 				A1000024001 /* BottomActionButtonsView.swift in Sources */,
 				A1000025001 /* ProjectImageSelectorView.swift in Sources */,
+				A1000040301 /* ProjectImagePreviewSheet.swift in Sources */,
 				A1000026001 /* HomeScreen.swift in Sources */,
 				A1000027001 /* SingleCounterScreen.swift in Sources */,
 				A1000028001 /* DoubleCounterScreen.swift in Sources */,
 				A1000029001 /* LibraryScreen.swift in Sources */,
+				A1000029501 /* StatsScreen.swift in Sources */,
 				A1000030001 /* ProjectDetailScreen.swift in Sources */,
 				A1000031001 /* SettingsScreen.swift in Sources */,
 				A1000032001 /* SheetDestination.swift in Sources */,

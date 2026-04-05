@@ -24,7 +24,7 @@ struct LibraryScreen: View {
                     newProjectFAB
                 }
             }
-            .navigationTitle("Library")
+            .navigationTitle(String(localized: "nav.library"))
             .toolbar {
                 if viewModel.isMultiSelectMode {
                     multiSelectToolbar

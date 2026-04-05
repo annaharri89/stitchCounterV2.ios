@@ -36,9 +36,6 @@
     "action_reset" : {
 
     },
-    "Add notes about your project" : {
-
-    },
     "Are you sure you want to reset the %@ counter to 0?" : {
 
     },
@@ -78,9 +75,6 @@
         }
       }
     },
-    "Create" : {
-
-    },
     "Create new project" : {
 
     },
@@ -108,16 +102,10 @@
     "Discard" : {
 
     },
-    "Discard Changes?" : {
-
-    },
     "Double" : {
 
     },
     "Edit custom adjustment amount" : {
-
-    },
-    "Edit Project" : {
 
     },
     "Enter a custom adjustment amount" : {
@@ -138,11 +126,38 @@
     "Finished" : {
 
     },
-    "Library" : {
-
+    "nav.library" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Library"
+          }
+        }
+      }
     },
-    "Mark as Completed" : {
-
+    "nav.settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
+    },
+    "nav.stats" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stats"
+          }
+        }
+      }
     },
     "New Double Counter" : {
 
