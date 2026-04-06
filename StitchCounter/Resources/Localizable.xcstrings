@@ -183,17 +183,341 @@
     "Opens options to create a single or double counter project" : {
 
     },
-    "Project Images" : {
-
-    },
     "Project Notes" : {
 
     },
     "Project Title" : {
 
     },
-    "Project title is required. Do you want to discard this project?" : {
-
+    "project.create.button.hint.disabled" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a valid title and total rows before creating this project"
+          }
+        }
+      }
+    },
+    "project.create.button.hint.enabled" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saves this project to your library"
+          }
+        }
+      }
+    },
+    "project.detail.backA11y" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back"
+          }
+        }
+      }
+    },
+    "project.detail.closeA11y" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        }
+      }
+    },
+    "project.detail.navTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Project Details"
+          }
+        }
+      }
+    },
+    "project.discard.message.hasChanges" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have unsaved changes. Are you sure you want to discard them?"
+          }
+        }
+      }
+    },
+    "project.discard.message.needsTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A project title is required. You can discard this draft or keep editing."
+          }
+        }
+      }
+    },
+    "project.discard.title.hasChanges" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discard changes?"
+          }
+        }
+      }
+    },
+    "project.discard.title.needsTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Title required"
+          }
+        }
+      }
+    },
+    "project.imagePreview.closeA11y" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close image preview"
+          }
+        }
+      }
+    },
+    "project.imagePreview.fullImageA11y" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Full size project image, page %lld"
+          }
+        }
+      }
+    },
+    "project.imagePreview.pageFormat" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld of %2$lld"
+          }
+        }
+      }
+    },
+    "project.imagePreview.unavailableMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This image could not be loaded from storage."
+          }
+        }
+      }
+    },
+    "project.imagePreview.unavailableTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image unavailable"
+          }
+        }
+      }
+    },
+    "project.photos.addAnotherPhotoA11y" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add another photo"
+          }
+        }
+      }
+    },
+    "project.photos.addPhoto" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add a photo"
+          }
+        }
+      }
+    },
+    "project.photos.addPhotoA11y" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add project photo"
+          }
+        }
+      }
+    },
+    "project.photos.addPhotoHint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens the photo picker"
+          }
+        }
+      }
+    },
+    "project.photos.countFormat" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld of %2$lld"
+          }
+        }
+      }
+    },
+    "project.photos.header" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Project photos"
+          }
+        }
+      }
+    },
+    "project.photos.maxReachedA11y" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photo limit reached"
+          }
+        }
+      }
+    },
+    "project.photos.maxReachedFormat" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maximum of %lld photos reached"
+          }
+        }
+      }
+    },
+    "project.photos.openPreviewHint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens a full screen preview"
+          }
+        }
+      }
+    },
+    "project.photos.projectImageA11y" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Project photo"
+          }
+        }
+      }
+    },
+    "project.photos.removeImageA11y" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove image"
+          }
+        }
+      }
+    },
+    "project.rowProgress.a11y" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Row progress: %1$lld of %2$lld rows"
+          }
+        }
+      }
+    },
+    "project.validation.titleRequired" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Title is required"
+          }
+        }
+      }
+    },
+    "project.validation.totalRowsGreaterThanZero" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total rows must be greater than 0"
+          }
+        }
+      }
+    },
+    "project.validation.totalRowsRequired" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total rows is required"
+          }
+        }
+      }
+    },
+    "project.validation.totalRowsRequiredAndGreater" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total rows is required and must be greater than 0"
+          }
+        }
+      }
     },
     "Reset" : {
 
@@ -774,6 +1098,39 @@
     "Single" : {
 
     },
+    "stats.comingSoon.icon.accessibility" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stats feature coming soon"
+          }
+        }
+      }
+    },
+    "stats.comingSoon.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Track your stitching stats and progress over time"
+          }
+        }
+      }
+    },
+    "stats.comingSoon.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coming Soon"
+          }
+        }
+      }
+    },
     "Stitch Counter" : {
 
     },
@@ -850,9 +1207,6 @@
 
     },
     "Total Rows" : {
-
-    },
-    "You have unsaved changes. Are you sure you want to discard them?" : {
 
     }
   },

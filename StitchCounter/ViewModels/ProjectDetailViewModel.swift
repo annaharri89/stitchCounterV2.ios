@@ -1,8 +1,7 @@
 import SwiftUI
 import Combine
-import PhotosUI
 
-enum DismissalResult {
+enum DismissalResult: Equatable {
     case allowed
     case blocked
     case showDiscardDialog
@@ -24,7 +23,7 @@ final class ProjectDetailViewModel: ObservableObject {
     @Published var totalRowsError: String?
     @Published var dismissalResult: DismissalResult?
     
-    private let projectService: ProjectService
+    private let projectService: ProjectServiceProtocol
     private var autoSaveTask: Task<Void, Never>?
     private let autoSaveDelayNanoseconds: UInt64 = 1_000_000_000
     private var originalTitle: String = ""
@@ -34,10 +33,15 @@ final class ProjectDetailViewModel: ObservableObject {
     private var originalCompletedAt: Date?
     private var originalImagePaths: [String] = []
     
-    init(projectService: ProjectService) {
+    init(projectService: ProjectServiceProtocol) {
         self.projectService = projectService
     }
-
+    
+    var isProjectPersistedInLibrary: Bool {
+        guard let project else { return false }
+        return projectService.getProject(by: project.id) != nil
+    }
+    
     func resolvedImagePathForDisplay(_ storedPath: String) -> String {
         projectService.resolvedImagePathForDisplay(storedPath)
     }
@@ -116,7 +120,9 @@ final class ProjectDetailViewModel: ObservableObject {
     func updateTitle(_ newTitle: String) {
         title = newTitle
         recalculateHasUnsavedChanges()
-        titleError = newTitle.trimmingCharacters(in: .whitespaces).isEmpty ? "Title is required" : nil
+        if !newTitle.trimmingCharacters(in: .whitespaces).isEmpty {
+            titleError = nil
+        }
         triggerAutoSave()
     }
     
@@ -137,13 +143,12 @@ final class ProjectDetailViewModel: ObservableObject {
         totalRows = newTotalRows
         recalculateHasUnsavedChanges()
         
-        let totalRowsValue = Int(newTotalRows) ?? 0
-        let isDoubleCounter = projectType == .double
-        
-        if isDoubleCounter && totalRowsValue <= 0 && !newTotalRows.isEmpty {
-            totalRowsError = "Total rows must be greater than 0"
-        } else if isDoubleCounter && newTotalRows.isEmpty {
-            totalRowsError = "Total rows is required"
+        if projectType == .double {
+            let trimmed = newTotalRows.trimmingCharacters(in: .whitespaces)
+            let value = Int(trimmed) ?? 0
+            if !trimmed.isEmpty && value > 0 {
+                totalRowsError = nil
+            }
         } else {
             totalRowsError = nil
         }
@@ -159,12 +164,21 @@ final class ProjectDetailViewModel: ObservableObject {
             || imagePaths != originalImagePaths
     }
     
+    private func canPersistCurrentEdits() -> Bool {
+        let titleTrimmed = title.trimmingCharacters(in: .whitespaces)
+        guard !titleTrimmed.isEmpty else { return false }
+        if projectType == .double {
+            let trimmedRows = totalRows.trimmingCharacters(in: .whitespaces)
+            guard !trimmedRows.isEmpty, (Int(trimmedRows) ?? 0) > 0 else { return false }
+        }
+        return true
+    }
+    
     private func triggerAutoSave() {
         autoSaveTask?.cancel()
-        guard let project = project, project.id != UUID() else { return }
-        let isExistingProject = projectService.getProject(by: project.id) != nil
-        
-        guard hasUnsavedChanges && isExistingProject else { return }
+        guard project != nil else { return }
+        guard isProjectPersistedInLibrary else { return }
+        guard hasUnsavedChanges && canPersistCurrentEdits() else { return }
         
         autoSaveTask = Task {
             try? await Task.sleep(nanoseconds: autoSaveDelayNanoseconds)
@@ -173,8 +187,10 @@ final class ProjectDetailViewModel: ObservableObject {
         }
     }
     
-    func save() {
-        guard let existingProject = project else { return }
+    @discardableResult
+    func save() -> Bool {
+        guard let existingProject = project else { return false }
+        guard canPersistCurrentEdits() else { return false }
         
         existingProject.title = title
         existingProject.totalRows = Int(totalRows) ?? 0
@@ -190,19 +206,44 @@ final class ProjectDetailViewModel: ObservableObject {
         originalCompletedAt = completedAt
         originalImagePaths = imagePaths
         hasUnsavedChanges = false
+        return true
     }
     
     func attemptDismissal() {
         autoSaveTask?.cancel()
         
-        if title.trimmingCharacters(in: .whitespaces).isEmpty {
-            titleError = "Title is required"
+        let titleTrimmed = title.trimmingCharacters(in: .whitespaces)
+        if titleTrimmed.isEmpty {
+            titleError = String(localized: "project.validation.titleRequired")
             dismissalResult = .showDiscardDialog
-        } else if hasUnsavedChanges {
-            dismissalResult = .showDiscardDialog
-        } else {
-            save()
+            return
+        }
+        
+        if projectType == .double {
+            let rowsTrimmed = totalRows.trimmingCharacters(in: .whitespaces)
+            let totalRowsValue = Int(rowsTrimmed) ?? 0
+            if rowsTrimmed.isEmpty {
+                totalRowsError = String(localized: "project.validation.totalRowsRequired")
+                dismissalResult = .showDiscardDialog
+                return
+            }
+            if totalRowsValue <= 0 {
+                totalRowsError = String(localized: "project.validation.totalRowsGreaterThanZero")
+                dismissalResult = .showDiscardDialog
+                return
+            }
+        }
+        
+        if isProjectPersistedInLibrary {
+            if save() {
+                dismissalResult = .allowed
+            } else {
+                dismissalResult = .showDiscardDialog
+            }
+        } else if createProject() != nil {
             dismissalResult = .allowed
+        } else {
+            dismissalResult = .showDiscardDialog
         }
     }
     
@@ -235,18 +276,49 @@ final class ProjectDetailViewModel: ObservableObject {
         triggerAutoSave()
     }
     
+    func reorderImagePaths(draggedPath: String, dropTargetPath: String) {
+        guard draggedPath != dropTargetPath,
+              let fromIndex = imagePaths.firstIndex(of: draggedPath),
+              let toIndex = imagePaths.firstIndex(of: dropTargetPath) else { return }
+        var paths = imagePaths
+        let moved = paths.remove(at: fromIndex)
+        paths.insert(moved, at: toIndex)
+        imagePaths = paths
+        recalculateHasUnsavedChanges()
+        triggerAutoSave()
+    }
+    
+    func applyImagePathsOrder(_ newOrder: [String]) {
+        guard newOrder.count == imagePaths.count else { return }
+        let oldFrequency = Dictionary(grouping: imagePaths, by: { $0 }).mapValues { $0.count }
+        let newFrequency = Dictionary(grouping: newOrder, by: { $0 }).mapValues { $0.count }
+        guard oldFrequency == newFrequency else { return }
+        imagePaths = newOrder
+        recalculateHasUnsavedChanges()
+        triggerAutoSave()
+    }
+    
     func createProject() -> UUID? {
         guard !title.trimmingCharacters(in: .whitespaces).isEmpty else {
-            titleError = "Title is required"
+            titleError = String(localized: "project.validation.titleRequired")
             return nil
         }
         
-        let isDoubleCounter = projectType == .double
-        let totalRowsValue = Int(totalRows) ?? 0
-        
-        if isDoubleCounter && totalRowsValue <= 0 {
-            totalRowsError = "Total rows is required and must be greater than 0"
-            return nil
+        let totalRowsValue: Int
+        if projectType == .double {
+            let trimmedRows = totalRows.trimmingCharacters(in: .whitespaces)
+            if trimmedRows.isEmpty {
+                totalRowsError = String(localized: "project.validation.totalRowsRequired")
+                return nil
+            }
+            let parsedRows = Int(trimmedRows) ?? 0
+            if parsedRows <= 0 {
+                totalRowsError = String(localized: "project.validation.totalRowsGreaterThanZero")
+                return nil
+            }
+            totalRowsValue = parsedRows
+        } else {
+            totalRowsValue = Int(totalRows.trimmingCharacters(in: .whitespaces)) ?? 0
         }
         
         let newProject = projectService.createProject(type: projectType)

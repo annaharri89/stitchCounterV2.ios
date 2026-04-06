@@ -6,6 +6,9 @@ import Combine
 protocol ProjectServiceProtocol {
     func getProject(by id: UUID) -> Project?
     func saveProject(_ project: Project)
+    func createProject(type: ProjectType) -> Project
+    func saveImage(_ imageData: Data, for project: Project, at index: Int) -> String?
+    func resolvedImagePathForDisplay(_ storedPath: String) -> String
 }
 
 @MainActor

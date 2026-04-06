@@ -21,6 +21,15 @@ struct RowProgressView: View {
                     .font(.caption)
                     .foregroundColor(colors.onSurface.opacity(0.6))
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(
+                String(
+                    format: String(localized: "project.rowProgress.a11y"),
+                    locale: .current,
+                    currentRowCount,
+                    totalRows
+                )
+            )
         }
     }
 }
