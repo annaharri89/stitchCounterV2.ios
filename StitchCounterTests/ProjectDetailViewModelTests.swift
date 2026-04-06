@@ -85,7 +85,46 @@ final class ProjectDetailViewModelTests: XCTestCase {
         let newId = viewModel.createProject()
         
         XCTAssertNil(newId)
-        XCTAssertNotNil(viewModel.totalRowsError)
+        XCTAssertEqual(
+            viewModel.totalRowsError,
+            String(localized: "project.validation.totalRowsGreaterThanZero")
+        )
+    }
+    
+    func testCreateProjectWhenDoubleRequiresTotalRowsWhenEmpty() {
+        let viewModel = createViewModel()
+        viewModel.loadProject(nil, projectType: .double)
+        viewModel.updateTitle("Shawl")
+        viewModel.updateTotalRows("")
+        
+        XCTAssertNil(viewModel.createProject())
+        XCTAssertEqual(
+            viewModel.totalRowsError,
+            String(localized: "project.validation.totalRowsRequired")
+        )
+    }
+    
+    func testUpdateTitleWhileEmptyDoesNotSetTitleErrorBeforeCreateOrDismiss() {
+        let viewModel = createViewModel()
+        viewModel.loadProject(nil, projectType: .single)
+        viewModel.updateTitle("")
+        XCTAssertNil(viewModel.titleError)
+    }
+    
+    func testUpdateTotalRowsWhileEmptyDoesNotSetTotalRowsErrorBeforeCreateOrDismiss() {
+        let viewModel = createViewModel()
+        viewModel.loadProject(nil, projectType: .double)
+        viewModel.updateTotalRows("")
+        XCTAssertNil(viewModel.totalRowsError)
+    }
+    
+    func testCreateProjectWhenTitleInvalidThenTitleFixedClearsTitleError() {
+        let viewModel = createViewModel()
+        viewModel.loadProject(nil, projectType: .single)
+        XCTAssertNil(viewModel.createProject())
+        XCTAssertNotNil(viewModel.titleError)
+        viewModel.updateTitle("Socks")
+        XCTAssertNil(viewModel.titleError)
     }
     
     func testReorderImagePathsMovesDraggedItemBeforeDropTargetIndex() {

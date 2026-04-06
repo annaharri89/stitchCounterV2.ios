@@ -120,9 +120,9 @@ final class ProjectDetailViewModel: ObservableObject {
     func updateTitle(_ newTitle: String) {
         title = newTitle
         recalculateHasUnsavedChanges()
-        titleError = newTitle.trimmingCharacters(in: .whitespaces).isEmpty
-            ? String(localized: "project.validation.titleRequired")
-            : nil
+        if !newTitle.trimmingCharacters(in: .whitespaces).isEmpty {
+            titleError = nil
+        }
         triggerAutoSave()
     }
     
@@ -143,13 +143,12 @@ final class ProjectDetailViewModel: ObservableObject {
         totalRows = newTotalRows
         recalculateHasUnsavedChanges()
         
-        let totalRowsValue = Int(newTotalRows) ?? 0
-        let isDoubleCounter = projectType == .double
-        
-        if isDoubleCounter && totalRowsValue <= 0 && !newTotalRows.isEmpty {
-            totalRowsError = String(localized: "project.validation.totalRowsGreaterThanZero")
-        } else if isDoubleCounter && newTotalRows.isEmpty {
-            totalRowsError = String(localized: "project.validation.totalRowsRequired")
+        if projectType == .double {
+            let trimmed = newTotalRows.trimmingCharacters(in: .whitespaces)
+            let value = Int(trimmed) ?? 0
+            if !trimmed.isEmpty && value > 0 {
+                totalRowsError = nil
+            }
         } else {
             totalRowsError = nil
         }
@@ -305,12 +304,21 @@ final class ProjectDetailViewModel: ObservableObject {
             return nil
         }
         
-        let isDoubleCounter = projectType == .double
-        let totalRowsValue = Int(totalRows) ?? 0
-        
-        if isDoubleCounter && totalRowsValue <= 0 {
-            totalRowsError = String(localized: "project.validation.totalRowsRequiredAndGreater")
-            return nil
+        let totalRowsValue: Int
+        if projectType == .double {
+            let trimmedRows = totalRows.trimmingCharacters(in: .whitespaces)
+            if trimmedRows.isEmpty {
+                totalRowsError = String(localized: "project.validation.totalRowsRequired")
+                return nil
+            }
+            let parsedRows = Int(trimmedRows) ?? 0
+            if parsedRows <= 0 {
+                totalRowsError = String(localized: "project.validation.totalRowsGreaterThanZero")
+                return nil
+            }
+            totalRowsValue = parsedRows
+        } else {
+            totalRowsValue = Int(totalRows.trimmingCharacters(in: .whitespaces)) ?? 0
         }
         
         let newProject = projectService.createProject(type: projectType)

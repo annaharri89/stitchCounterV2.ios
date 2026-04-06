@@ -133,14 +133,9 @@ struct ProjectDetailScreen: View {
                             .foregroundStyle(colors.onPrimary)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
-                    .disabled(!isFormValid)
                     .padding(.horizontal, 24)
                     .padding(.bottom, 16)
-                    .accessibilityHint(
-                        isFormValid
-                            ? String(localized: "project.create.button.hint.enabled")
-                            : String(localized: "project.create.button.hint.disabled")
-                    )
+                    .accessibilityHint(String(localized: "project.create.button.a11yHint"))
                 }
             }
         }
@@ -305,11 +300,6 @@ struct ProjectDetailScreen: View {
         .accessibilityHint(String(localized: "Toggles whether this project is finished"))
     }
     
-    private var isFormValid: Bool {
-        let titleValid = !viewModel.title.trimmingCharacters(in: .whitespaces).isEmpty
-        let totalRowsValid = viewModel.projectType != .double || (Int(viewModel.totalRows) ?? 0) > 0
-        return titleValid && totalRowsValid
-    }
 }
 
 #Preview {
