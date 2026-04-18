@@ -6,8 +6,10 @@ enum CounterType: String, CaseIterable {
     
     var displayName: String {
         switch self {
-        case .stitch: return "Stitches"
-        case .row: return "Rows/Rounds"
+        case .stitch:
+            return String(localized: String.LocalizationValue("counter.type.stitches"))
+        case .row:
+            return String(localized: String.LocalizationValue("counter.type.rowsRounds"))
         }
     }
 }

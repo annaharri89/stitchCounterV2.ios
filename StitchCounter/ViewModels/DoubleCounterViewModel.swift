@@ -1,6 +1,31 @@
 import SwiftUI
 import Combine
 
+protocol CustomAdjustmentTipConsuming {
+    func consumeShouldShowTip() -> Bool
+}
+
+struct UserDefaultsCustomAdjustmentTipConsumer: CustomAdjustmentTipConsuming {
+    private let defaults: UserDefaults
+    private let storageKey = "has_seen_custom_adjustment_tip"
+    
+    init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+    }
+    
+    func consumeShouldShowTip() -> Bool {
+        if defaults.bool(forKey: storageKey) {
+            return false
+        }
+        defaults.set(true, forKey: storageKey)
+        return true
+    }
+}
+
+struct NoCustomAdjustmentTipConsumer: CustomAdjustmentTipConsuming {
+    func consumeShouldShowTip() -> Bool { false }
+}
+
 @MainActor
 final class DoubleCounterViewModel: ObservableObject {
     @Published var projectId: UUID?
@@ -10,6 +35,9 @@ final class DoubleCounterViewModel: ObservableObject {
     @Published var totalRows: Int = 0
     @Published var totalStitchesEver: Int = 0
     @Published var isLoading: Bool = false
+    @Published var shouldShowCustomAdjustmentTip: Bool = false
+    @Published var activeCustomAdjustmentDialogCounterType: CounterType?
+    @Published var customAdjustmentDialogInput: String = ""
     
     var rowProgress: Float? {
         guard totalRows > 0 else { return nil }
@@ -20,8 +48,14 @@ final class DoubleCounterViewModel: ObservableObject {
     private var autoSaveTask: Task<Void, Never>?
     private let autoSaveDelayNanoseconds: UInt64 = 1_000_000_000
     
-    init(projectService: ProjectServiceProtocol) {
+    init(
+        projectService: ProjectServiceProtocol,
+        customAdjustmentTipConsumer: CustomAdjustmentTipConsuming = UserDefaultsCustomAdjustmentTipConsumer()
+    ) {
         self.projectService = projectService
+        if customAdjustmentTipConsumer.consumeShouldShowTip() {
+            shouldShowCustomAdjustmentTip = true
+        }
     }
     
     func loadProject(_ id: UUID?) {
@@ -36,6 +70,8 @@ final class DoubleCounterViewModel: ObservableObject {
         }
         
         let preserveCounters = projectId == project.id && projectId != nil
+        let preservedDialogType = activeCustomAdjustmentDialogCounterType
+        let preservedDialogInput = customAdjustmentDialogInput
         projectId = project.id
         title = project.title
         totalRows = project.totalRows
@@ -55,6 +91,9 @@ final class DoubleCounterViewModel: ObservableObject {
             )
             totalStitchesEver = project.totalStitchesEver
         }
+        
+        activeCustomAdjustmentDialogCounterType = preservedDialogType
+        customAdjustmentDialogInput = preservedDialogInput
     }
     
     func increment(_ type: CounterType) {
@@ -103,6 +142,26 @@ final class DoubleCounterViewModel: ObservableObject {
         triggerAutoSave()
     }
     
+    func showCustomAdjustmentDialog(_ type: CounterType) {
+        let state = type == .stitch ? stitchCounterState : rowCounterState
+        let currentAmount = max(state.customAdjustmentAmount, 1)
+        activeCustomAdjustmentDialogCounterType = type
+        customAdjustmentDialogInput = String(currentAmount)
+    }
+    
+    func dismissCustomAdjustmentDialog() {
+        activeCustomAdjustmentDialogCounterType = nil
+        customAdjustmentDialogInput = ""
+    }
+    
+    func updateCustomAdjustmentDialogInput(_ input: String) {
+        customAdjustmentDialogInput = input
+    }
+    
+    func onCustomAdjustmentTipShown() {
+        shouldShowCustomAdjustmentTip = false
+    }
+    
     func resetState() {
         projectId = nil
         title = ""
@@ -110,11 +169,14 @@ final class DoubleCounterViewModel: ObservableObject {
         rowCounterState = CounterState()
         totalRows = 0
         totalStitchesEver = 0
+        shouldShowCustomAdjustmentTip = false
+        activeCustomAdjustmentDialogCounterType = nil
+        customAdjustmentDialogInput = ""
     }
     
     private func triggerAutoSave() {
         autoSaveTask?.cancel()
-        guard let projectId = projectId else { return }
+        guard projectId != nil else { return }
         
         autoSaveTask = Task {
             try? await Task.sleep(nanoseconds: autoSaveDelayNanoseconds)
