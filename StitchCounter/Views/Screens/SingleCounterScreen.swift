@@ -22,6 +22,7 @@ struct SingleCounterScreen: View {
                 portraitLayout
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(isLandscape ? EdgeInsets(top: 8, leading: 24, bottom: 8, trailing: 24) : EdgeInsets(top: 24, leading: 24, bottom: 24, trailing: 24))
         .onAppear {
             viewModel.loadProject(projectId)
@@ -35,9 +36,10 @@ struct SingleCounterScreen: View {
     }
     
     private var portraitLayout: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 0) {
+            Spacer(minLength: 0)
             counterTopBar
-            
+                .padding(.top, 14)
             CounterView(
                 count: viewModel.counterState.count,
                 selectedAdjustment: viewModel.counterState.adjustment,
@@ -48,13 +50,16 @@ struct SingleCounterScreen: View {
                 onAdjustmentTapped: { viewModel.changeAdjustment($0) },
                 onCustomAdjustmentAmountChanged: { viewModel.setCustomAdjustmentAmount($0) },
                 showResetButton: false,
-                counterNumberIsVertical: true
+                counterNumberIsVertical: true,
+                evenVerticalDistribution: true
             )
-            
-            Spacer()
-            
+            .padding(.top, 8)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            Spacer(minLength: 0)
             BottomActionButtonsView(onResetAll: { showResetDialog = true })
+            Spacer(minLength: 0)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
     private var landscapeLayout: some View {
@@ -73,9 +78,11 @@ struct SingleCounterScreen: View {
                 showResetButton: false,
                 counterNumberIsVertical: false
             )
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             
             BottomActionButtonsView(onResetAll: { showResetDialog = true })
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
     @ViewBuilder
