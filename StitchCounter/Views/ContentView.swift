@@ -48,30 +48,13 @@ struct ContentView: View {
     private func sheetContent(for destination: SheetDestination) -> some View {
         switch destination {
         case .singleCounter(let projectId):
-            let viewModel = coordinator.createSingleCounterViewModel()
-            SingleCounterScreen(
-                viewModel: viewModel,
-                projectId: projectId,
-                onNavigateToDetail: { id in
-                    coordinator.showingSheet = .projectDetail(projectId: id)
-                }
-            )
-            .onDisappear {
-                viewModel.attemptDismissal()
-            }
-            
+            SingleCounterSheetHost(projectId: projectId, projectService: coordinator.projectService)
+                .environmentObject(coordinator)
+                .id(SheetDestination.singleCounter(projectId: projectId).id)
         case .doubleCounter(let projectId):
-            let viewModel = coordinator.createDoubleCounterViewModel()
-            DoubleCounterScreen(
-                viewModel: viewModel,
-                projectId: projectId,
-                onNavigateToDetail: { id in
-                    coordinator.showingSheet = .projectDetail(projectId: id)
-                }
-            )
-            .onDisappear {
-                viewModel.attemptDismissal()
-            }
+            DoubleCounterSheetHost(projectId: projectId, projectService: coordinator.projectService)
+                .environmentObject(coordinator)
+                .id(SheetDestination.doubleCounter(projectId: projectId).id)
             
         case .newProjectDetail(let projectType):
             let viewModel = coordinator.createProjectDetailViewModel()
@@ -81,6 +64,10 @@ struct ContentView: View {
                 projectType: projectType,
                 onDismiss: {
                     coordinator.dismissSheet()
+                    coordinator.libraryViewModel.refreshProjects()
+                },
+                onProjectCreated: { projectId in
+                    coordinator.navigateToCounterAfterCreation(projectId: projectId, projectType: projectType)
                     coordinator.libraryViewModel.refreshProjects()
                 }
             )
@@ -101,6 +88,54 @@ struct ContentView: View {
                     }
                 }
             )
+        }
+    }
+}
+
+struct SingleCounterSheetHost: View {
+    let projectId: UUID
+    @EnvironmentObject private var coordinator: AppCoordinator
+    @StateObject private var viewModel: SingleCounterViewModel
+
+    init(projectId: UUID, projectService: ProjectServiceProtocol) {
+        self.projectId = projectId
+        _viewModel = StateObject(wrappedValue: SingleCounterViewModel(projectService: projectService))
+    }
+
+    var body: some View {
+        SingleCounterScreen(
+            viewModel: viewModel,
+            projectId: projectId,
+            onNavigateToDetail: { id in
+                coordinator.showingSheet = .projectDetail(projectId: id)
+            }
+        )
+        .onDisappear {
+            viewModel.attemptDismissal()
+        }
+    }
+}
+
+struct DoubleCounterSheetHost: View {
+    let projectId: UUID
+    @EnvironmentObject private var coordinator: AppCoordinator
+    @StateObject private var viewModel: DoubleCounterViewModel
+
+    init(projectId: UUID, projectService: ProjectServiceProtocol) {
+        self.projectId = projectId
+        _viewModel = StateObject(wrappedValue: DoubleCounterViewModel(projectService: projectService))
+    }
+
+    var body: some View {
+        DoubleCounterScreen(
+            viewModel: viewModel,
+            projectId: projectId,
+            onNavigateToDetail: { id in
+                coordinator.showingSheet = .projectDetail(projectId: id)
+            }
+        )
+        .onDisappear {
+            viewModel.attemptDismissal()
         }
     }
 }
