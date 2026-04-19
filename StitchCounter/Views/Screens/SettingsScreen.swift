@@ -604,11 +604,12 @@ struct SettingsActionButton: View {
                 Image(systemName: systemImage)
                 Text(LocalizedStringKey(titleLocalizationKey))
             }
-            .frame(maxWidth: .infinity, minHeight: 44)
-            .padding(.vertical, 12)
+            .font(.headline)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 14)
             .background(backgroundColor)
             .foregroundColor(foregroundColor)
-            .cornerRadius(8)
+            .cornerRadius(12)
             .contentShape(Rectangle())
         }
         .disabled(isDisabled)
