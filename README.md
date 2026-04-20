@@ -13,18 +13,13 @@ No GitHub Actions in this repo yet—build and test in Xcode.
 ## Links
 
 - Android (open testing): [Play](https://play.google.com/apps/testing/dev.harrisonsoftware.stitchCounter)
-- [LinkedIn](https://www.linkedin.com/in/anna-harrison-83a38628/) · [harrisonsoftware.dev](https://harrisonsoftware.dev) · [Contact](https://harrisonsoftware.dev/contact)
+- [LinkedIn](https://www.linkedin.com/in/anna-harrison-83a38628/) 
+- [harrisonsoftware.dev](https://harrisonsoftware.dev) 
+- [Contact](https://harrisonsoftware.dev/contact)
 
 ## Screenshots
 
 No images in this repo right now. The [Android README](https://github.com/annaharri89/stitchCounterV2/blob/main/README.md) has screenshots if you want a visual.
-
-## Tech choices (short)
-
-- SwiftUI entry in `StitchCounterApp`; navigation/sheets via `AppCoordinator` / `ContentView`.
-- Data stays on device; no cloud.
-- Export/import zip with metadata + images; fine for moving between phones or swapping with the Android build.
-- Stats screen is still a “coming soon” stub (same as Android today).
 
 ## Stack
 
@@ -33,6 +28,14 @@ No images in this repo right now. The [Android README](https://github.com/annaha
 | Swift, SwiftUI | min iOS 17 (`IPHONEOS_DEPLOYMENT_TARGET` in the Xcode project) |
 | SwiftData | [ZIPFoundation](https://github.com/weichsel/ZIPFoundation) for zips |
 | Strings | `Localizable.xcstrings` |
+
+
+## Tech choices
+
+- SwiftUI entry in `StitchCounterApp`; navigation/sheets via `AppCoordinator` / `ContentView`.
+- Data stays on device; no cloud.
+- Export/import zip with metadata + images; fine for moving between phones or swapping with the Android build.
+- Stats screen is still a “coming soon” stub.
 
 ## Features
 
@@ -71,3 +74,7 @@ Run `StitchCounterTests` before you merge anything big. No git hooks in either r
 
 Use your Apple Developer team, bump bundle ID if you’re not just on your own device, then Product → Archive and go through App Store Connect / TestFlight as usual.
 
+## Roadmap
+- custom app icons
+- expansion on accessibility features
+- stats
