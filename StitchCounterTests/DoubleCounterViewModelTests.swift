@@ -12,7 +12,7 @@ final class DoubleCounterViewModelTests: XCTestCase {
     }
     
     private func createViewModel() -> DoubleCounterViewModel {
-        DoubleCounterViewModel(projectService: mockService)
+        DoubleCounterViewModel(projectService: mockService, customAdjustmentTipConsumer: NoCustomAdjustmentTipConsumer())
     }
     
     private func sampleProject(
@@ -307,5 +307,51 @@ final class DoubleCounterViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.rowCounterState.count, 0)
         XCTAssertEqual(viewModel.totalRows, 0)
         XCTAssertEqual(viewModel.totalStitchesEver, 0)
+    }
+    
+    func testInitWithTipConsumerShowsCustomAdjustmentTipOnce() {
+        struct AlwaysShowTip: CustomAdjustmentTipConsuming {
+            func consumeShouldShowTip() -> Bool { true }
+        }
+        
+        let viewModel = DoubleCounterViewModel(projectService: mockService, customAdjustmentTipConsumer: AlwaysShowTip())
+        XCTAssertTrue(viewModel.shouldShowCustomAdjustmentTip)
+        
+        viewModel.onCustomAdjustmentTipShown()
+        XCTAssertFalse(viewModel.shouldShowCustomAdjustmentTip)
+    }
+    
+    func testShowCustomAdjustmentDialogSetsActiveTypeAndPrefillsInput() {
+        let viewModel = createViewModel()
+        viewModel.setCustomAdjustmentAmount(.stitch, value: 12)
+        viewModel.showCustomAdjustmentDialog(.stitch)
+        
+        XCTAssertEqual(viewModel.activeCustomAdjustmentDialogCounterType, .stitch)
+        XCTAssertEqual(viewModel.customAdjustmentDialogInput, "12")
+    }
+    
+    func testDismissCustomAdjustmentDialogClearsState() {
+        let viewModel = createViewModel()
+        viewModel.showCustomAdjustmentDialog(.row)
+        viewModel.updateCustomAdjustmentDialogInput("99")
+        viewModel.dismissCustomAdjustmentDialog()
+        
+        XCTAssertNil(viewModel.activeCustomAdjustmentDialogCounterType)
+        XCTAssertEqual(viewModel.customAdjustmentDialogInput, "")
+    }
+    
+    func testLoadProjectPreservesCustomAdjustmentDialogState() {
+        let project = sampleProject()
+        mockService.addProject(project)
+        
+        let viewModel = createViewModel()
+        viewModel.loadProject(project.id)
+        viewModel.showCustomAdjustmentDialog(.stitch)
+        viewModel.updateCustomAdjustmentDialogInput("42")
+        
+        viewModel.loadProject(project.id)
+        
+        XCTAssertEqual(viewModel.activeCustomAdjustmentDialogCounterType, .stitch)
+        XCTAssertEqual(viewModel.customAdjustmentDialogInput, "42")
     }
 }
