@@ -12,9 +12,9 @@ No GitHub Actions in this repo yet—build and test in Xcode.
 
 ## Links
 
-- Android (open testing): [Play](https://play.google.com/apps/testing/dev.harrisonsoftware.stitchCounter)
+- [Android (open testing)](https://play.google.com/apps/testing/dev.harrisonsoftware.stitchCounter)
 - [LinkedIn](https://www.linkedin.com/in/anna-harrison-83a38628/) 
-- [harrisonsoftware.dev](https://harrisonsoftware.dev) 
+- [Developer Portfolio](https://harrisonsoftware.dev) 
 - [Contact](https://harrisonsoftware.dev/contact)
 
 ## Screenshots
