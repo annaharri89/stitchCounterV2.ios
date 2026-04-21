@@ -78,7 +78,7 @@ final class SingleCounterViewModel: ObservableObject {
     
     private func triggerAutoSave() {
         autoSaveTask?.cancel()
-        guard let projectId = projectId else { return }
+        guard projectId != nil else { return }
         
         autoSaveTask = Task {
             try? await Task.sleep(nanoseconds: autoSaveDelayNanoseconds)

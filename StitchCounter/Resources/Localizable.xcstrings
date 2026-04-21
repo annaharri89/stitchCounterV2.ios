@@ -34,10 +34,26 @@
 
     },
     "action_reset" : {
-
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset"
+          }
+        }
+      }
     },
-    "Are you sure you want to reset the %@ counter to 0?" : {
-
+    "action.resetAll" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset All"
+          }
+        }
+      }
     },
     "Cancel" : {
 
@@ -75,6 +91,28 @@
         }
       }
     },
+    "counter.type.rowsRounds" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rows/Rounds"
+          }
+        }
+      }
+    },
+    "counter.type.stitches" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stitches"
+          }
+        }
+      }
+    },
     "Create new project" : {
 
     },
@@ -90,11 +128,71 @@
     "Creates a new single counter project" : {
 
     },
-    "Custom +%lld" : {
-
+    "customAdjustment.fieldA11y" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom adjustment amount"
+          }
+        }
+      }
     },
-    "Custom adjustment amount" : {
-
+    "customAdjustment.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a custom adjustment amount"
+          }
+        }
+      }
+    },
+    "customAdjustment.placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter amount"
+          }
+        }
+      }
+    },
+    "customAdjustment.stepButton.a11y" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom step, plus %lld"
+          }
+        }
+      }
+    },
+    "customAdjustment.stepButton.hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap once to select this step size. When it is already selected, tap again to change the amount."
+          }
+        }
+      }
+    },
+    "customAdjustment.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set Custom Amount"
+          }
+        }
+      }
     },
     "Delete" : {
 
@@ -105,14 +203,49 @@
     "Double" : {
 
     },
-    "Edit custom adjustment amount" : {
-
+    "doubleCounter.resetAll.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to reset both Stitches and Rows/Rounds counters to 0?"
+          }
+        }
+      }
     },
-    "Enter a custom adjustment amount" : {
-
+    "doubleCounter.resetAll.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset All Counters?"
+          }
+        }
+      }
     },
-    "Enter amount" : {
-
+    "doubleCounter.resetNamed.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to reset the %@ counter to 0?"
+          }
+        }
+      }
+    },
+    "doubleCounter.resetNamed.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset %@ Counter?"
+          }
+        }
+      }
     },
     "Enter notes about your project" : {
 
@@ -177,9 +310,6 @@
     "No Projects Yet" : {
 
     },
-    "Opens a dialog to enter a custom number" : {
-
-    },
     "Opens options to create a single or double counter project" : {
 
     },
@@ -189,24 +319,13 @@
     "Project Title" : {
 
     },
-    "project.create.button.hint.disabled" : {
+    "project.create.button.a11yHint" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enter a valid title and total rows before creating this project"
-          }
-        }
-      }
-    },
-    "project.create.button.hint.enabled" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saves this project to your library"
+            "value" : "Saves this project to your library. If required fields are missing or invalid, messages appear under those fields."
           }
         }
       }
@@ -240,6 +359,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Project Details"
+          }
+        }
+      }
+    },
+    "project.details.fabA11y" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Project details"
           }
         }
       }
@@ -431,6 +561,17 @@
         }
       }
     },
+    "project.photos.openPreviewAndReorderHint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap to open a full screen preview. Long press, then drag to reorder; other photos move aside while you drag."
+          }
+        }
+      }
+    },
     "project.photos.openPreviewHint" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -492,7 +633,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Total rows must be greater than 0"
+            "value" : "Total Rows must be greater than 0"
           }
         }
       }
@@ -503,18 +644,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Total rows is required"
-          }
-        }
-      }
-    },
-    "project.validation.totalRowsRequiredAndGreater" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total rows is required and must be greater than 0"
+            "value" : "Total Rows is required"
           }
         }
       }
@@ -522,16 +652,10 @@
     "Reset" : {
 
     },
-    "Reset %@ Counter?" : {
-
-    },
     "Save" : {
 
     },
     "Select projects" : {
-
-    },
-    "Set Custom Amount" : {
 
     },
     "settings.backup.export.hint" : {
@@ -1134,9 +1258,6 @@
     "Stitch Counter" : {
 
     },
-    "Tap amount to select custom adjustment" : {
-
-    },
     "theme.displayName.cloudSoft" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1199,6 +1320,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yarn Candy"
+          }
+        }
+      }
+    },
+    "tip.customAdjustment" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tip: Tap the custom step button once to select it, then tap again to edit the amount."
           }
         }
       }

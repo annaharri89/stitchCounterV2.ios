@@ -29,14 +29,6 @@ final class AppCoordinator: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func createSingleCounterViewModel() -> SingleCounterViewModel {
-        SingleCounterViewModel(projectService: projectService)
-    }
-    
-    func createDoubleCounterViewModel() -> DoubleCounterViewModel {
-        DoubleCounterViewModel(projectService: projectService)
-    }
-    
     func createProjectDetailViewModel() -> ProjectDetailViewModel {
         ProjectDetailViewModel(projectService: projectService)
     }

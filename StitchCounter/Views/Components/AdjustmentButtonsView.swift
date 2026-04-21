@@ -1,45 +1,107 @@
 import SwiftUI
 
+struct ManagedCustomAdjustmentDialog {
+    let isPresented: Bool
+    let readInput: () -> String
+    let onDismiss: () -> Void
+    let onInputChange: (String) -> Void
+}
+
 struct AdjustmentButtonsView: View {
     let selectedAdjustment: AdjustmentAmount
     let customAdjustmentAmount: Int
     let onAdjustmentTapped: (AdjustmentAmount) -> Void
     let onCustomAdjustmentAmountChanged: (Int) -> Void
+    let managedCustomAdjustmentDialog: ManagedCustomAdjustmentDialog?
+    let onManagedCustomAdjustmentEditTap: (() -> Void)?
     
     @State private var showCustomAdjustmentAlert = false
     @State private var customAdjustmentInput = ""
     @Environment(\.themeColors) private var colors
     
+    init(
+        selectedAdjustment: AdjustmentAmount,
+        customAdjustmentAmount: Int,
+        onAdjustmentTapped: @escaping (AdjustmentAmount) -> Void,
+        onCustomAdjustmentAmountChanged: @escaping (Int) -> Void,
+        managedCustomAdjustmentDialog: ManagedCustomAdjustmentDialog? = nil,
+        onManagedCustomAdjustmentEditTap: (() -> Void)? = nil
+    ) {
+        self.selectedAdjustment = selectedAdjustment
+        self.customAdjustmentAmount = customAdjustmentAmount
+        self.onAdjustmentTapped = onAdjustmentTapped
+        self.onCustomAdjustmentAmountChanged = onCustomAdjustmentAmountChanged
+        self.managedCustomAdjustmentDialog = managedCustomAdjustmentDialog
+        self.onManagedCustomAdjustmentEditTap = onManagedCustomAdjustmentEditTap
+    }
+    
     private var resolvedCustomAmount: Int {
         max(customAdjustmentAmount, 1)
+    }
+    
+    private var customAdjustmentAlertPresented: Binding<Bool> {
+        Binding(
+            get: { managedCustomAdjustmentDialog?.isPresented ?? showCustomAdjustmentAlert },
+            set: { isShowing in
+                if !isShowing {
+                    managedCustomAdjustmentDialog?.onDismiss()
+                    showCustomAdjustmentAlert = false
+                }
+            }
+        )
+    }
+    
+    private var customAdjustmentInputBinding: Binding<String> {
+        Binding(
+            get: { managedCustomAdjustmentDialog?.readInput() ?? customAdjustmentInput },
+            set: { newValue in
+                let filtered = String(newValue.filter(\.isNumber).prefix(4))
+                if let managed = managedCustomAdjustmentDialog {
+                    managed.onInputChange(filtered)
+                } else {
+                    customAdjustmentInput = filtered
+                }
+            }
+        )
     }
     
     var body: some View {
         HStack(spacing: 8) {
             ForEach(AdjustmentAmount.allCases) { amount in
-                if amount == .custom {
-                    customAdjustmentButton
-                } else {
-                    adjustmentButton(for: amount)
+                Group {
+                    if amount == .custom {
+                        customAdjustmentButton
+                    } else {
+                        adjustmentButton(for: amount)
+                    }
                 }
+                .frame(maxWidth: .infinity)
             }
         }
         .alert(
-            "Set Custom Amount",
-            isPresented: $showCustomAdjustmentAlert
+            String(localized: "customAdjustment.title"),
+            isPresented: customAdjustmentAlertPresented
         ) {
-            TextField("Enter amount", text: $customAdjustmentInput)
+            TextField(String(localized: "customAdjustment.placeholder"), text: customAdjustmentInputBinding)
                 .keyboardType(.numberPad)
-                .accessibilityLabel("Custom adjustment amount")
+                .accessibilityLabel(String(localized: "customAdjustment.fieldA11y"))
             
-            Button("Save") {
-                if let parsed = Int(customAdjustmentInput), parsed > 0 {
+            Button(String(localized: "Save")) {
+                let raw: String
+                if let managed = managedCustomAdjustmentDialog {
+                    raw = managed.readInput()
+                } else {
+                    raw = customAdjustmentInput
+                }
+                if let parsed = Int(raw), parsed > 0 {
                     onCustomAdjustmentAmountChanged(parsed)
+                    managedCustomAdjustmentDialog?.onDismiss()
+                    showCustomAdjustmentAlert = false
                 }
             }
-            Button("Cancel", role: .cancel) {}
+            Button(String(localized: "common.cancel"), role: .cancel) {}
         } message: {
-            Text("Enter a custom adjustment amount")
+            Text(String(localized: "customAdjustment.message"))
         }
     }
     
@@ -55,55 +117,52 @@ struct AdjustmentButtonsView: View {
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
                 .frame(minWidth: 44, minHeight: 44)
+                .frame(maxWidth: .infinity)
                 .background(isSelected ? colors.secondary : colors.tertiary)
                 .foregroundColor(isSelected ? colors.onSecondary : colors.onTertiary)
                 .cornerRadius(8)
         }
-        .accessibilityLabel(
-            amount == .custom
-                ? "Custom +\(resolvedCustomAmount)"
-                : amount.displayText
-        )
+        .accessibilityLabel(amount.displayText(customAmount: resolvedCustomAmount))
     }
     
     private var customAdjustmentButton: some View {
         let isSelected = selectedAdjustment == .custom
         
-        return HStack(spacing: 6) {
-            Text(AdjustmentAmount.custom.displayText(customAmount: resolvedCustomAmount))
-                .font(.subheadline)
-                .fontWeight(.medium)
-                .fixedSize(horizontal: true, vertical: false)
-                .layoutPriority(1)
-                .frame(minHeight: 44)
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    onAdjustmentTapped(.custom)
-                }
-            
-            Image(systemName: "pencil")
-                .font(.caption)
-                .frame(width: 24, height: 24)
-                .contentShape(Rectangle())
-                .onTapGesture {
+        return Button {
+            if isSelected {
+                if let onManagedCustomAdjustmentEditTap {
+                    onManagedCustomAdjustmentEditTap()
+                } else {
                     customAdjustmentInput = "\(resolvedCustomAmount)"
                     showCustomAdjustmentAlert = true
                 }
-                .accessibilityElement()
-                .accessibilityLabel("Edit custom adjustment amount")
-                .accessibilityHint("Opens a dialog to enter a custom number")
-                .accessibilityAddTraits(.isButton)
+            } else {
+                onAdjustmentTapped(.custom)
+            }
+        } label: {
+            HStack(spacing: 4) {
+                Text(AdjustmentAmount.custom.displayText(customAmount: resolvedCustomAmount))
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                Image(systemName: "pencil")
+                    .font(.caption)
+                    .accessibilityHidden(true)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .frame(minWidth: 44, minHeight: 44)
+            .frame(maxWidth: .infinity)
+            .background(isSelected ? colors.secondary : colors.tertiary)
+            .foregroundColor(isSelected ? colors.onSecondary : colors.onTertiary)
+            .cornerRadius(8)
         }
-        .fixedSize(horizontal: true, vertical: false)
-        .padding(.leading, 16)
-        .padding(.trailing, 12)
-        .padding(.vertical, 8)
-        .background(isSelected ? colors.secondary : colors.tertiary)
-        .foregroundColor(isSelected ? colors.onSecondary : colors.onTertiary)
-        .cornerRadius(8)
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel("Custom +\(resolvedCustomAmount)")
-        .accessibilityHint("Tap amount to select custom adjustment")
+        .accessibilityLabel(
+            String(
+                format: String(localized: "customAdjustment.stepButton.a11y"),
+                resolvedCustomAmount
+            )
+        )
+        .accessibilityHint(String(localized: "customAdjustment.stepButton.hint"))
     }
 }
 

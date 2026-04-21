@@ -1,22 +1,80 @@
-# stitchCounterV2.ios
-A modern iOS app for counting stitches with support for multiple themes and color schemes. This is being ported over from an android version I created. Here is the link to it: [Stitch Counter](https://github.com/annaharri89/stitchCounterV2)
+# Stitch Counter (iOS)
 
-## Features (Work in Progress)
+iOS app for knitting and crochet projects: single and double counters, a project library, photos per project, a handful of color themes (light/dark), and zip backup/restore that matches the Android app. Nothing syncs to the cloud unless you export the zip yourself.
 
-- Single and Double counter project modes for tracking stitches and/or rows
-- Library system to save counters and return to them later.
-- Three different customizable color themes. The theme selection changes the app icon. Light and Dark mode also supported.
-- Responsive design for all device sizes using Swift UI. Optimized for portrait and landscape orientations.
-- The user can upload up to 10 photos to each project. Photos are saved to the device's file system.
-- An import/export library feature to backup your library of projects since the app storage is local to your device and not uploaded to any cloud based service.
-- Stitch Counter does not collect analytics, tracking data, or personal information. All data is stored locally on the user’s device.
+Swift/SwiftUI port of [stitchCounterV2](https://github.com/annaharri89/stitchCounterV2) (Android). Older app: [Stitch Counter](https://github.com/annaharri89/stitchCounter).
 
-## Support This Project
+## What’s in here
 
-This app is developed independently and provided without ads, tracking, or data collection.
+SwiftUI + SwiftData for projects. Backups are zips with `backup.json` in the same shape as Android (`LibraryBackupManager`; tests keep the JSON keys aligned). Six themes, alternate app icons via `ThemeService`. XCTest lives under `StitchCounterTests/`.
 
-If you'd like to support its development:
+No GitHub Actions in this repo yet—build and test in Xcode.
 
-☕ https://ko-fi.com/annaharri
+## Links
 
-Thank you for supporting privacy-friendly software 💖
+- [Android (open testing)](https://play.google.com/apps/testing/dev.harrisonsoftware.stitchCounter)
+- [LinkedIn](https://www.linkedin.com/in/anna-harrison-83a38628/) 
+- [Developer Portfolio](https://harrisonsoftware.dev) 
+- [Contact](https://harrisonsoftware.dev/contact)
+
+## Screenshots
+
+No images in this repo right now. The [Android README](https://github.com/annaharri89/stitchCounterV2/blob/main/README.md) has screenshots if you want a visual.
+
+## Stack
+
+| | |
+| --- | --- |
+| Swift, SwiftUI | min iOS 17 (`IPHONEOS_DEPLOYMENT_TARGET` in the Xcode project) |
+| SwiftData | [ZIPFoundation](https://github.com/weichsel/ZIPFoundation) for zips |
+| Strings | `Localizable.xcstrings` |
+
+
+## Tech choices
+
+- SwiftUI entry in `StitchCounterApp`; navigation/sheets via `AppCoordinator` / `ContentView`.
+- Data stays on device; no cloud.
+- Export/import zip with metadata + images; fine for moving between phones or swapping with the Android build.
+- Stats screen is still a “coming soon” stub.
+
+## Features
+
+- Single and double counter modes (stitches / rows)
+- Project library: create, open, bulk delete
+- Six themes, light/dark; theme can change the alternate icon
+- Works on phones, portrait and landscape
+- Up to six photos per project (files under Documents—see `ProjectImageSelectorView` / `ProjectService`)
+- Zip export/import compatible with Android backups
+- No analytics; privacy links live in `AppConstants` / settings
+
+## Run it
+
+Open `StitchCounter.xcodeproj`, pick the StitchCounter scheme, run on a simulator or device. Needs Xcode with the iOS 17+ SDK. Tests: ⌘U or `xcodebuild test`.
+
+## Folders
+
+```
+StitchCounter/
+├── Coordinators/
+├── Models/
+├── Services/
+├── Theme/
+├── ViewModels/
+├── Views/
+│   ├── Components/
+│   └── Screens/
+├── Resources/
+├── Constants.swift
+└── StitchCounterApp.swift
+```
+
+Run `StitchCounterTests` before you merge anything big. No git hooks in either repo—up to you.
+
+## Shipping a build
+
+Use your Apple Developer team, bump bundle ID if you’re not just on your own device, then Product → Archive and go through App Store Connect / TestFlight as usual.
+
+## Roadmap
+- custom app icons
+- expansion on accessibility features
+- stats
