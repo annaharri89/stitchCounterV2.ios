@@ -54,7 +54,7 @@ Open `StitchCounter.xcodeproj`, pick the StitchCounter scheme, run on a simulato
 | --- | --- |
 | Xcode | **15.0+** (iOS 17 SDK). The project sets `IPHONEOS_DEPLOYMENT_TARGET` to 17.0 and Swift language mode **5.0** (`SWIFT_VERSION` in `StitchCounter.xcodeproj`). Last opened with **Xcode 26.4.1** (build 17E202) on the maintainer machine—newer Xcode is fine. |
 | SwiftLint / SwiftFormat | Not configured in-repo; follow the style of nearby code. |
-| CI | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs `xcodebuild test` on pull requests and pushes to `main` on GitHub’s **`macos-15`** image (default **Xcode 16.4**, build **16F6** on the current runner image), targeting the **iPhone 16 (iOS 18.5)** simulator. |
+| CI | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs `xcodebuild test` on pull requests and pushes to `main` on GitHub’s **`macos-15`** image (default **Xcode 16.4**, build **16F6** on the current runner image), targeting any available iOS simulator on the runner. |
 
 ## Contributing
 
