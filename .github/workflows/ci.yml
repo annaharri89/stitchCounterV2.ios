@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -15,8 +16,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run unit tests
-        run: >-
-          xcodebuild test
-          -project StitchCounter.xcodeproj
-          -scheme StitchCounter
-          -destination 'platform=iOS Simulator'
+        run: |
+          set -euo pipefail
+          dest_line="$(xcodebuild -showdestinations -project StitchCounter.xcodeproj -scheme StitchCounter 2>&1 | grep "platform:iOS Simulator" | grep "OS:" | head -1)"
+          if [ -z "${dest_line}" ]; then
+            echo "CI[ios-test]: no concrete iOS Simulator in -showdestinations; dumping list"
+            xcodebuild -showdestinations -project StitchCounter.xcodeproj -scheme StitchCounter
+            exit 1
+          fi
+          sim_id="$(printf '%s' "${dest_line}" | sed -E 's/^.*, id:([^,]+),.*$/\1/')"
+          echo "CI[ios-test]: destination id=${sim_id}"
+          xcodebuild test \
+            -project StitchCounter.xcodeproj \
+            -scheme StitchCounter \
+            -destination "id=${sim_id}"
