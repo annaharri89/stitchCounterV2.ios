@@ -18,13 +18,33 @@ jobs:
       - name: Run unit tests
         run: |
           set -euo pipefail
-          dest_line="$(xcodebuild -showdestinations -project StitchCounter.xcodeproj -scheme StitchCounter 2>&1 | grep "platform:iOS Simulator" | grep "OS:" | head -1)"
-          if [ -z "${dest_line}" ]; then
-            echo "CI[ios-test]: no concrete iOS Simulator in -showdestinations; dumping list"
-            xcodebuild -showdestinations -project StitchCounter.xcodeproj -scheme StitchCounter
+          # GHA uses bash with pipefail: grep with no match exits 1 and kills the step unless
+          # the pipeline is allowed to be empty.
+          dest_line="$(
+            xcodebuild -showdestinations -project StitchCounter.xcodeproj -scheme StitchCounter 2>&1 \
+              | grep "platform:iOS Simulator" | grep "OS:" | head -1 || true
+          )"
+          sim_id=""
+          if [ -n "${dest_line}" ]; then
+            raw_id="$(printf '%s' "${dest_line}" | grep -oE 'id:[0-9A-F-]{8}-[0-9A-F-]{4}-[0-9A-F-]{4}-[0-9A-F-]{4}-[0-9A-F-]{12}' | head -1 || true)"
+            sim_id="${raw_id#id:}"
+          fi
+          if [ -z "${sim_id}" ]; then
+            echo "CI[ios-test]: -showdestinations missing a parsable iOS id; using simctl"
+            sim_id="$(
+              xcrun simctl list devices available 2>/dev/null \
+                | grep -Ei 'iPhone|iPad' \
+                | grep -oE '\([0-9A-F-]{8}-[0-9A-F-]{4}-[0-9A-F-]{4}-[0-9A-F-]{4}-[0-9A-F-]{12}\)' \
+                | tr -d '()' \
+                | head -1 || true
+            )"
+          fi
+          if [ -z "${sim_id}" ]; then
+            echo "CI[ios-test]: no iOS simulator UDID; dumping -showdestinations and simctl"
+            xcodebuild -showdestinations -project StitchCounter.xcodeproj -scheme StitchCounter || true
+            xcrun simctl list devices available || true
             exit 1
           fi
-          sim_id="$(printf '%s' "${dest_line}" | sed -E 's/^.*, id:([^,]+),.*$/\1/')"
           echo "CI[ios-test]: destination id=${sim_id}"
           xcodebuild test \
             -project StitchCounter.xcodeproj \
