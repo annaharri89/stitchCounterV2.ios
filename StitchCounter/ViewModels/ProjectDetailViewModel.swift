@@ -7,6 +7,12 @@ enum DismissalResult: Equatable {
     case showDiscardDialog
 }
 
+private enum ProjectEditValidationFailure: Equatable {
+    case titleEmpty
+    case doubleTotalRowsEmpty
+    case doubleTotalRowsNotPositive
+}
+
 @MainActor
 final class ProjectDetailViewModel: ObservableObject {
     @Published var project: Project?
@@ -24,8 +30,7 @@ final class ProjectDetailViewModel: ObservableObject {
     @Published var dismissalResult: DismissalResult?
     
     private let projectService: ProjectServiceProtocol
-    private var autoSaveTask: Task<Void, Never>?
-    private let autoSaveDelayNanoseconds: UInt64 = 1_000_000_000
+    private let autoSaveDebouncer: AutoSaveDebouncer
     private var originalTitle: String = ""
     private var originalTotalRows: String = ""
     private var originalNotes: String = ""
@@ -33,8 +38,9 @@ final class ProjectDetailViewModel: ObservableObject {
     private var originalCompletedAt: Date?
     private var originalImagePaths: [String] = []
     
-    init(projectService: ProjectServiceProtocol) {
+    init(projectService: ProjectServiceProtocol, autoSaveDebouncer: AutoSaveDebouncer? = nil) {
         self.projectService = projectService
+        self.autoSaveDebouncer = autoSaveDebouncer ?? AutoSaveDebouncer()
     }
     
     var isProjectPersistedInLibrary: Bool {
@@ -48,44 +54,13 @@ final class ProjectDetailViewModel: ObservableObject {
     
     func loadProject(_ projectId: UUID?, projectType: ProjectType) {
         isLoading = true
+        defer { completeLoadCycle() }
         
         if let projectId = projectId, let existingProject = projectService.getProject(by: projectId) {
-            project = existingProject
-            title = existingProject.title
-            self.projectType = existingProject.type
-            totalRows = existingProject.totalRows > 0 ? String(existingProject.totalRows) : ""
-            notes = existingProject.notes
-            isCompleted = existingProject.completedAt != nil
-            completedAt = existingProject.completedAt
-            imagePaths = existingProject.imagePaths
-            originalTitle = existingProject.title
-            originalTotalRows = totalRows
-            originalNotes = existingProject.notes
-            originalIsCompleted = isCompleted
-            originalCompletedAt = existingProject.completedAt
-            originalImagePaths = existingProject.imagePaths
+            applyPersistedProjectToEditableState(existingProject)
         } else {
-            let newProject = Project(type: projectType)
-            project = newProject
-            title = ""
-            self.projectType = projectType
-            totalRows = ""
-            notes = ""
-            isCompleted = false
-            completedAt = nil
-            imagePaths = []
-            originalTitle = ""
-            originalTotalRows = ""
-            originalNotes = ""
-            originalIsCompleted = false
-            originalCompletedAt = nil
-            originalImagePaths = []
+            applyNewDraftProjectState(projectType: projectType)
         }
-        
-        isLoading = false
-        hasUnsavedChanges = false
-        titleError = nil
-        totalRowsError = nil
     }
     
     func loadProjectById(_ projectId: UUID) {
@@ -96,25 +71,8 @@ final class ProjectDetailViewModel: ObservableObject {
             return
         }
         
-        project = existingProject
-        title = existingProject.title
-        projectType = existingProject.type
-        totalRows = existingProject.totalRows > 0 ? String(existingProject.totalRows) : ""
-        notes = existingProject.notes
-        isCompleted = existingProject.completedAt != nil
-        completedAt = existingProject.completedAt
-        imagePaths = existingProject.imagePaths
-        originalTitle = existingProject.title
-        originalTotalRows = totalRows
-        originalNotes = existingProject.notes
-        originalIsCompleted = isCompleted
-        originalCompletedAt = existingProject.completedAt
-        originalImagePaths = existingProject.imagePaths
-        
-        isLoading = false
-        hasUnsavedChanges = false
-        titleError = nil
-        totalRowsError = nil
+        applyPersistedProjectToEditableState(existingProject)
+        completeLoadCycle()
     }
     
     func updateTitle(_ newTitle: String) {
@@ -165,25 +123,16 @@ final class ProjectDetailViewModel: ObservableObject {
     }
     
     private func canPersistCurrentEdits() -> Bool {
-        let titleTrimmed = title.trimmingCharacters(in: .whitespaces)
-        guard !titleTrimmed.isEmpty else { return false }
-        if projectType == .double {
-            let trimmedRows = totalRows.trimmingCharacters(in: .whitespaces)
-            guard !trimmedRows.isEmpty, (Int(trimmedRows) ?? 0) > 0 else { return false }
-        }
-        return true
+        validateEditableProjectForPersist() == nil
     }
     
     private func triggerAutoSave() {
-        autoSaveTask?.cancel()
-        guard project != nil else { return }
-        guard isProjectPersistedInLibrary else { return }
-        guard hasUnsavedChanges && canPersistCurrentEdits() else { return }
-        
-        autoSaveTask = Task {
-            try? await Task.sleep(nanoseconds: autoSaveDelayNanoseconds)
-            guard !Task.isCancelled else { return }
-            save()
+        let shouldSchedule = project != nil
+            && isProjectPersistedInLibrary
+            && hasUnsavedChanges
+            && canPersistCurrentEdits()
+        autoSaveDebouncer.rescheduleDelayedSave(if: shouldSchedule) {
+            self.save()
         }
     }
     
@@ -210,28 +159,12 @@ final class ProjectDetailViewModel: ObservableObject {
     }
     
     func attemptDismissal() {
-        autoSaveTask?.cancel()
+        autoSaveDebouncer.cancel()
         
-        let titleTrimmed = title.trimmingCharacters(in: .whitespaces)
-        if titleTrimmed.isEmpty {
-            titleError = String(localized: "project.validation.titleRequired")
+        if let validationFailure = validateEditableProjectForPersist() {
+            applyValidationFailureToPublishedErrors(validationFailure)
             dismissalResult = .showDiscardDialog
             return
-        }
-        
-        if projectType == .double {
-            let rowsTrimmed = totalRows.trimmingCharacters(in: .whitespaces)
-            let totalRowsValue = Int(rowsTrimmed) ?? 0
-            if rowsTrimmed.isEmpty {
-                totalRowsError = String(localized: "project.validation.totalRowsRequired")
-                dismissalResult = .showDiscardDialog
-                return
-            }
-            if totalRowsValue <= 0 {
-                totalRowsError = String(localized: "project.validation.totalRowsGreaterThanZero")
-                dismissalResult = .showDiscardDialog
-                return
-            }
         }
         
         if isProjectPersistedInLibrary {
@@ -299,24 +232,15 @@ final class ProjectDetailViewModel: ObservableObject {
     }
     
     func createProject() -> UUID? {
-        guard !title.trimmingCharacters(in: .whitespaces).isEmpty else {
-            titleError = String(localized: "project.validation.titleRequired")
+        if let validationFailure = validateEditableProjectForPersist() {
+            applyValidationFailureToPublishedErrors(validationFailure)
             return nil
         }
         
         let totalRowsValue: Int
         if projectType == .double {
             let trimmedRows = totalRows.trimmingCharacters(in: .whitespaces)
-            if trimmedRows.isEmpty {
-                totalRowsError = String(localized: "project.validation.totalRowsRequired")
-                return nil
-            }
-            let parsedRows = Int(trimmedRows) ?? 0
-            if parsedRows <= 0 {
-                totalRowsError = String(localized: "project.validation.totalRowsGreaterThanZero")
-                return nil
-            }
-            totalRowsValue = parsedRows
+            totalRowsValue = Int(trimmedRows) ?? 0
         } else {
             totalRowsValue = Int(totalRows.trimmingCharacters(in: .whitespaces)) ?? 0
         }
@@ -341,5 +265,68 @@ final class ProjectDetailViewModel: ObservableObject {
         totalRowsError = nil
         
         return newProject.id
+    }
+    
+    private func applyPersistedProjectToEditableState(_ existingProject: Project) {
+        project = existingProject
+        title = existingProject.title
+        projectType = existingProject.type
+        totalRows = existingProject.totalRows > 0 ? String(existingProject.totalRows) : ""
+        notes = existingProject.notes
+        isCompleted = existingProject.completedAt != nil
+        completedAt = existingProject.completedAt
+        imagePaths = existingProject.imagePaths
+        originalTitle = existingProject.title
+        originalTotalRows = totalRows
+        originalNotes = existingProject.notes
+        originalIsCompleted = isCompleted
+        originalCompletedAt = existingProject.completedAt
+        originalImagePaths = existingProject.imagePaths
+    }
+    
+    private func applyNewDraftProjectState(projectType: ProjectType) {
+        project = Project(type: projectType)
+        title = ""
+        self.projectType = projectType
+        totalRows = ""
+        notes = ""
+        isCompleted = false
+        completedAt = nil
+        imagePaths = []
+        originalTitle = ""
+        originalTotalRows = ""
+        originalNotes = ""
+        originalIsCompleted = false
+        originalCompletedAt = nil
+        originalImagePaths = []
+    }
+    
+    private func completeLoadCycle() {
+        isLoading = false
+        hasUnsavedChanges = false
+        titleError = nil
+        totalRowsError = nil
+    }
+    
+    private func validateEditableProjectForPersist() -> ProjectEditValidationFailure? {
+        let titleTrimmed = title.trimmingCharacters(in: .whitespaces)
+        guard !titleTrimmed.isEmpty else { return .titleEmpty }
+        if projectType == .double {
+            let rowsTrimmed = totalRows.trimmingCharacters(in: .whitespaces)
+            guard !rowsTrimmed.isEmpty else { return .doubleTotalRowsEmpty }
+            guard (Int(rowsTrimmed) ?? 0) > 0 else { return .doubleTotalRowsNotPositive }
+        }
+        return nil
+    }
+    
+    private func applyValidationFailureToPublishedErrors(_ failure: ProjectEditValidationFailure) {
+        switch failure {
+        case .titleEmpty:
+            titleError = String(localized: "project.validation.titleRequired")
+        case .doubleTotalRowsEmpty:
+            totalRowsError = String(localized: "project.validation.totalRowsRequired")
+        case .doubleTotalRowsNotPositive:
+            totalRowsError = String(localized: "project.validation.totalRowsGreaterThanZero")
+        }
     }
 }

@@ -10,11 +10,11 @@ final class SingleCounterViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     
     private let projectService: ProjectServiceProtocol
-    private var autoSaveTask: Task<Void, Never>?
-    private let autoSaveDelayNanoseconds: UInt64 = 1_000_000_000
+    private let autoSaveDebouncer: AutoSaveDebouncer
     
-    init(projectService: ProjectServiceProtocol) {
+    init(projectService: ProjectServiceProtocol, autoSaveDebouncer: AutoSaveDebouncer? = nil) {
         self.projectService = projectService
+        self.autoSaveDebouncer = autoSaveDebouncer ?? AutoSaveDebouncer()
     }
     
     func loadProject(_ id: UUID?) {
@@ -77,13 +77,8 @@ final class SingleCounterViewModel: ObservableObject {
     }
     
     private func triggerAutoSave() {
-        autoSaveTask?.cancel()
-        guard projectId != nil else { return }
-        
-        autoSaveTask = Task {
-            try? await Task.sleep(nanoseconds: autoSaveDelayNanoseconds)
-            guard !Task.isCancelled else { return }
-            save()
+        autoSaveDebouncer.rescheduleDelayedSave(if: projectId != nil) {
+            self.save()
         }
     }
     
@@ -98,7 +93,7 @@ final class SingleCounterViewModel: ObservableObject {
     }
     
     func attemptDismissal() {
-        autoSaveTask?.cancel()
+        autoSaveDebouncer.cancel()
         save()
     }
 }

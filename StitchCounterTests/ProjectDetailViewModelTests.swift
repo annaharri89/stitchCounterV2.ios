@@ -15,6 +15,28 @@ final class ProjectDetailViewModelTests: XCTestCase {
         ProjectDetailViewModel(projectService: mockService)
     }
     
+    func testDraftUpdateTitleDoesNotAutoSaveViaDebouncerGuards() async {
+        let debouncer = AutoSaveDebouncerTestSupport.immediate()
+        let viewModel = ProjectDetailViewModel(projectService: mockService, autoSaveDebouncer: debouncer)
+        viewModel.loadProject(nil, projectType: .single)
+        viewModel.updateTitle("Draft title")
+        
+        await Task.yield()
+        XCTAssertEqual(mockService.savedProjects.count, 0)
+    }
+    
+    func testPersistedUpdateTitleAutoSavesWhenDebouncerGuardsPass() async {
+        let debouncer = AutoSaveDebouncerTestSupport.immediate()
+        let existing = Project(type: .single, title: "Old")
+        mockService.addProject(existing)
+        let viewModel = ProjectDetailViewModel(projectService: mockService, autoSaveDebouncer: debouncer)
+        viewModel.loadProjectById(existing.id)
+        viewModel.updateTitle("New title")
+        
+        await Task.yield()
+        XCTAssertEqual(mockService.getProject(by: existing.id)?.title, "New title")
+    }
+    
     func testAttemptDismissalWhenDraftValidCreatesProjectAndAllowsDismissal() {
         let viewModel = createViewModel()
         viewModel.loadProject(nil, projectType: .single)

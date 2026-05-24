@@ -33,13 +33,19 @@ final class AppCoordinator: ObservableObject {
         ProjectDetailViewModel(projectService: projectService)
     }
     
-    func showCounter(for project: Project) {
-        switch project.type {
+    func sheetDestination(for project: Project?, type projectType: ProjectType, id projectId: UUID) -> SheetDestination {
+        let resolvedProjectType = project?.type ?? projectType
+        let resolvedProjectId = project?.id ?? projectId
+        switch resolvedProjectType {
         case .single:
-            showingSheet = .singleCounter(projectId: project.id)
+            return .singleCounter(projectId: resolvedProjectId)
         case .double:
-            showingSheet = .doubleCounter(projectId: project.id)
+            return .doubleCounter(projectId: resolvedProjectId)
         }
+    }
+    
+    func showCounter(for project: Project) {
+        showingSheet = sheetDestination(for: project, type: project.type, id: project.id)
     }
     
     func showProjectDetail(projectId: UUID) {
@@ -51,12 +57,7 @@ final class AppCoordinator: ObservableObject {
     }
     
     func navigateToCounterAfterCreation(projectId: UUID, projectType: ProjectType) {
-        switch projectType {
-        case .single:
-            showingSheet = .singleCounter(projectId: projectId)
-        case .double:
-            showingSheet = .doubleCounter(projectId: projectId)
-        }
+        showingSheet = sheetDestination(for: nil, type: projectType, id: projectId)
     }
 }
 

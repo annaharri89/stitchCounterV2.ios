@@ -34,7 +34,7 @@
 		A1000024001 /* BottomActionButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000024000 /* BottomActionButtonsView.swift */; };
 		A1000025001 /* ProjectImageSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000025000 /* ProjectImageSelectorView.swift */; };
 		A1000040301 /* ProjectImagePreviewSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000040300 /* ProjectImagePreviewSheet.swift */; };
-		A1000026001 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000026000 /* HomeScreen.swift */; };
+		A1000040401 /* AutoSaveDebouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000040400 /* AutoSaveDebouncer.swift */; };
 		A1000027001 /* SingleCounterScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000027000 /* SingleCounterScreen.swift */; };
 		A1000028001 /* DoubleCounterScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000028000 /* DoubleCounterScreen.swift */; };
 		A1000029001 /* LibraryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000029000 /* LibraryScreen.swift */; };
@@ -57,6 +57,8 @@
 		A2000007001 /* LibraryBackupZipEligibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000007000 /* LibraryBackupZipEligibilityTests.swift */; };
 		A2000008001 /* ProjectDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000008000 /* ProjectDetailViewModelTests.swift */; };
 		A2000009001 /* AppCoordinatorNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000009000 /* AppCoordinatorNavigationTests.swift */; };
+		A2000010001 /* AutoSaveDebouncerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000010000 /* AutoSaveDebouncerTests.swift */; };
+		A2000014001 /* AutoSaveDebouncerTestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000014000 /* AutoSaveDebouncerTestSupport.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,7 +99,7 @@
 		A1000024000 /* BottomActionButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomActionButtonsView.swift; sourceTree = "<group>"; };
 		A1000025000 /* ProjectImageSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectImageSelectorView.swift; sourceTree = "<group>"; };
 		A1000040300 /* ProjectImagePreviewSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectImagePreviewSheet.swift; sourceTree = "<group>"; };
-		A1000026000 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
+		A1000040400 /* AutoSaveDebouncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSaveDebouncer.swift; sourceTree = "<group>"; };
 		A1000027000 /* SingleCounterScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleCounterScreen.swift; sourceTree = "<group>"; };
 		A1000028000 /* DoubleCounterScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleCounterScreen.swift; sourceTree = "<group>"; };
 		A1000029000 /* LibraryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryScreen.swift; sourceTree = "<group>"; };
@@ -122,6 +124,8 @@
 		A2000007000 /* LibraryBackupZipEligibilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryBackupZipEligibilityTests.swift; sourceTree = "<group>"; };
 		A2000008000 /* ProjectDetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewModelTests.swift; sourceTree = "<group>"; };
 		A2000009000 /* AppCoordinatorNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinatorNavigationTests.swift; sourceTree = "<group>"; };
+		A2000010000 /* AutoSaveDebouncerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSaveDebouncerTests.swift; sourceTree = "<group>"; };
+		A2000014000 /* AutoSaveDebouncerTestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSaveDebouncerTestSupport.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,6 +206,7 @@
 			children = (
 				A1000010000 /* ThemeService.swift */,
 				A1000011000 /* ProjectService.swift */,
+				A1000040400 /* AutoSaveDebouncer.swift */,
 				A1000040000 /* LibraryBackupManager.swift */,
 				A1000040100 /* ProjectImagePathResolver.swift */,
 			);
@@ -251,7 +256,6 @@
 		A1000000012 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
-				A1000026000 /* HomeScreen.swift */,
 				A1000027000 /* SingleCounterScreen.swift */,
 				A1000028000 /* DoubleCounterScreen.swift */,
 				A1000029000 /* LibraryScreen.swift */,
@@ -292,6 +296,8 @@
 				A2000007000 /* LibraryBackupZipEligibilityTests.swift */,
 				A2000008000 /* ProjectDetailViewModelTests.swift */,
 				A2000009000 /* AppCoordinatorNavigationTests.swift */,
+				A2000010000 /* AutoSaveDebouncerTests.swift */,
+				A2000014000 /* AutoSaveDebouncerTestSupport.swift */,
 			);
 			path = StitchCounterTests;
 			sourceTree = "<group>";
@@ -405,6 +411,7 @@
 				A1000009001 /* ThemeEnvironment.swift in Sources */,
 				A1000010001 /* ThemeService.swift in Sources */,
 				A1000011001 /* ProjectService.swift in Sources */,
+				A1000040401 /* AutoSaveDebouncer.swift in Sources */,
 				A1000040001 /* LibraryBackupManager.swift in Sources */,
 				A1000040101 /* ProjectImagePathResolver.swift in Sources */,
 				A1000040201 /* MailComposeView.swift in Sources */,
@@ -424,7 +431,6 @@
 				A1000024001 /* BottomActionButtonsView.swift in Sources */,
 				A1000025001 /* ProjectImageSelectorView.swift in Sources */,
 				A1000040301 /* ProjectImagePreviewSheet.swift in Sources */,
-				A1000026001 /* HomeScreen.swift in Sources */,
 				A1000027001 /* SingleCounterScreen.swift in Sources */,
 				A1000028001 /* DoubleCounterScreen.swift in Sources */,
 				A1000029001 /* LibraryScreen.swift in Sources */,
@@ -449,6 +455,8 @@
 				A2000007001 /* LibraryBackupZipEligibilityTests.swift in Sources */,
 				A2000008001 /* ProjectDetailViewModelTests.swift in Sources */,
 				A2000009001 /* AppCoordinatorNavigationTests.swift in Sources */,
+				A2000010001 /* AutoSaveDebouncerTests.swift in Sources */,
+				A2000014001 /* AutoSaveDebouncerTestSupport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
