@@ -24,8 +24,7 @@ final class ProjectDetailViewModel: ObservableObject {
     @Published var dismissalResult: DismissalResult?
     
     private let projectService: ProjectServiceProtocol
-    private var autoSaveTask: Task<Void, Never>?
-    private let autoSaveDelayNanoseconds: UInt64 = 1_000_000_000
+    private let autoSaveDebouncer: AutoSaveDebouncer
     private var originalTitle: String = ""
     private var originalTotalRows: String = ""
     private var originalNotes: String = ""
@@ -33,8 +32,9 @@ final class ProjectDetailViewModel: ObservableObject {
     private var originalCompletedAt: Date?
     private var originalImagePaths: [String] = []
     
-    init(projectService: ProjectServiceProtocol) {
+    init(projectService: ProjectServiceProtocol, autoSaveDebouncer: AutoSaveDebouncer? = nil) {
         self.projectService = projectService
+        self.autoSaveDebouncer = autoSaveDebouncer ?? AutoSaveDebouncer()
     }
     
     var isProjectPersistedInLibrary: Bool {
@@ -175,15 +175,12 @@ final class ProjectDetailViewModel: ObservableObject {
     }
     
     private func triggerAutoSave() {
-        autoSaveTask?.cancel()
-        guard project != nil else { return }
-        guard isProjectPersistedInLibrary else { return }
-        guard hasUnsavedChanges && canPersistCurrentEdits() else { return }
-        
-        autoSaveTask = Task {
-            try? await Task.sleep(nanoseconds: autoSaveDelayNanoseconds)
-            guard !Task.isCancelled else { return }
-            save()
+        let shouldSchedule = project != nil
+            && isProjectPersistedInLibrary
+            && hasUnsavedChanges
+            && canPersistCurrentEdits()
+        autoSaveDebouncer.rescheduleDelayedSave(if: shouldSchedule) {
+            self.save()
         }
     }
     
@@ -210,7 +207,7 @@ final class ProjectDetailViewModel: ObservableObject {
     }
     
     func attemptDismissal() {
-        autoSaveTask?.cancel()
+        autoSaveDebouncer.cancel()
         
         let titleTrimmed = title.trimmingCharacters(in: .whitespaces)
         if titleTrimmed.isEmpty {

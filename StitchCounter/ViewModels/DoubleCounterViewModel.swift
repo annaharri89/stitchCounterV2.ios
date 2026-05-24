@@ -45,14 +45,15 @@ final class DoubleCounterViewModel: ObservableObject {
     }
     
     private let projectService: ProjectServiceProtocol
-    private var autoSaveTask: Task<Void, Never>?
-    private let autoSaveDelayNanoseconds: UInt64 = 1_000_000_000
+    private let autoSaveDebouncer: AutoSaveDebouncer
     
     init(
         projectService: ProjectServiceProtocol,
+        autoSaveDebouncer: AutoSaveDebouncer? = nil,
         customAdjustmentTipConsumer: CustomAdjustmentTipConsuming = UserDefaultsCustomAdjustmentTipConsumer()
     ) {
         self.projectService = projectService
+        self.autoSaveDebouncer = autoSaveDebouncer ?? AutoSaveDebouncer()
         if customAdjustmentTipConsumer.consumeShouldShowTip() {
             shouldShowCustomAdjustmentTip = true
         }
@@ -175,13 +176,8 @@ final class DoubleCounterViewModel: ObservableObject {
     }
     
     private func triggerAutoSave() {
-        autoSaveTask?.cancel()
-        guard projectId != nil else { return }
-        
-        autoSaveTask = Task {
-            try? await Task.sleep(nanoseconds: autoSaveDelayNanoseconds)
-            guard !Task.isCancelled else { return }
-            save()
+        autoSaveDebouncer.rescheduleDelayedSave(if: projectId != nil) {
+            self.save()
         }
     }
     
@@ -198,7 +194,7 @@ final class DoubleCounterViewModel: ObservableObject {
     }
     
     func attemptDismissal() {
-        autoSaveTask?.cancel()
+        autoSaveDebouncer.cancel()
         save()
     }
 }
