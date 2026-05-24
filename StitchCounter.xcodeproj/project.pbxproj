@@ -35,7 +35,6 @@
 		A1000025001 /* ProjectImageSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000025000 /* ProjectImageSelectorView.swift */; };
 		A1000040301 /* ProjectImagePreviewSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000040300 /* ProjectImagePreviewSheet.swift */; };
 		A1000040401 /* AutoSaveDebouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000040400 /* AutoSaveDebouncer.swift */; };
-		A1000026001 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000026000 /* HomeScreen.swift */; };
 		A1000027001 /* SingleCounterScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000027000 /* SingleCounterScreen.swift */; };
 		A1000028001 /* DoubleCounterScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000028000 /* DoubleCounterScreen.swift */; };
 		A1000029001 /* LibraryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000029000 /* LibraryScreen.swift */; };
@@ -101,7 +100,6 @@
 		A1000025000 /* ProjectImageSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectImageSelectorView.swift; sourceTree = "<group>"; };
 		A1000040300 /* ProjectImagePreviewSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectImagePreviewSheet.swift; sourceTree = "<group>"; };
 		A1000040400 /* AutoSaveDebouncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSaveDebouncer.swift; sourceTree = "<group>"; };
-		A1000026000 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		A1000027000 /* SingleCounterScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleCounterScreen.swift; sourceTree = "<group>"; };
 		A1000028000 /* DoubleCounterScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleCounterScreen.swift; sourceTree = "<group>"; };
 		A1000029000 /* LibraryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryScreen.swift; sourceTree = "<group>"; };
@@ -258,7 +256,6 @@
 		A1000000012 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
-				A1000026000 /* HomeScreen.swift */,
 				A1000027000 /* SingleCounterScreen.swift */,
 				A1000028000 /* DoubleCounterScreen.swift */,
 				A1000029000 /* LibraryScreen.swift */,
@@ -434,7 +431,6 @@
 				A1000024001 /* BottomActionButtonsView.swift in Sources */,
 				A1000025001 /* ProjectImageSelectorView.swift in Sources */,
 				A1000040301 /* ProjectImagePreviewSheet.swift in Sources */,
-				A1000026001 /* HomeScreen.swift in Sources */,
 				A1000027001 /* SingleCounterScreen.swift in Sources */,
 				A1000028001 /* DoubleCounterScreen.swift in Sources */,
 				A1000029001 /* LibraryScreen.swift in Sources */,
