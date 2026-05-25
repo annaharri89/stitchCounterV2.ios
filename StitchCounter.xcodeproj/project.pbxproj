@@ -48,6 +48,8 @@
 		A1000040001 /* LibraryBackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000040000 /* LibraryBackupManager.swift */; };
 		A1000040101 /* ProjectImagePathResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000040100 /* ProjectImagePathResolver.swift */; };
 		A1000040201 /* MailComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000040200 /* MailComposeView.swift */; };
+		A1000040501 /* FileLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000040500 /* FileLogger.swift */; };
+		A1000040601 /* LogRetentionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000040600 /* LogRetentionPolicy.swift */; };
 		A2000001001 /* MockProjectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000001000 /* MockProjectService.swift */; };
 		A2000002001 /* AdjustmentAmountTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000002000 /* AdjustmentAmountTests.swift */; };
 		A2000003001 /* CounterStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000003000 /* CounterStateTests.swift */; };
@@ -58,6 +60,7 @@
 		A2000008001 /* ProjectDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000008000 /* ProjectDetailViewModelTests.swift */; };
 		A2000009001 /* AppCoordinatorNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000009000 /* AppCoordinatorNavigationTests.swift */; };
 		A2000010001 /* AutoSaveDebouncerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000010000 /* AutoSaveDebouncerTests.swift */; };
+		A2000012001 /* FileLoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000012000 /* FileLoggerTests.swift */; };
 		A2000014001 /* AutoSaveDebouncerTestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000014000 /* AutoSaveDebouncerTestSupport.swift */; };
 /* End PBXBuildFile section */
 
@@ -114,6 +117,8 @@
 		A1000040000 /* LibraryBackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryBackupManager.swift; sourceTree = "<group>"; };
 		A1000040100 /* ProjectImagePathResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectImagePathResolver.swift; sourceTree = "<group>"; };
 		A1000040200 /* MailComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposeView.swift; sourceTree = "<group>"; };
+		A1000040500 /* FileLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileLogger.swift; sourceTree = "<group>"; };
+		A1000040600 /* LogRetentionPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogRetentionPolicy.swift; sourceTree = "<group>"; };
 		A2000000001 /* StitchCounterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StitchCounterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2000001000 /* MockProjectService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProjectService.swift; sourceTree = "<group>"; };
 		A2000002000 /* AdjustmentAmountTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustmentAmountTests.swift; sourceTree = "<group>"; };
@@ -125,6 +130,7 @@
 		A2000008000 /* ProjectDetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewModelTests.swift; sourceTree = "<group>"; };
 		A2000009000 /* AppCoordinatorNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinatorNavigationTests.swift; sourceTree = "<group>"; };
 		A2000010000 /* AutoSaveDebouncerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSaveDebouncerTests.swift; sourceTree = "<group>"; };
+		A2000012000 /* FileLoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileLoggerTests.swift; sourceTree = "<group>"; };
 		A2000014000 /* AutoSaveDebouncerTestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSaveDebouncerTestSupport.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -207,6 +213,8 @@
 				A1000010000 /* ThemeService.swift */,
 				A1000011000 /* ProjectService.swift */,
 				A1000040400 /* AutoSaveDebouncer.swift */,
+				A1000040500 /* FileLogger.swift */,
+				A1000040600 /* LogRetentionPolicy.swift */,
 				A1000040000 /* LibraryBackupManager.swift */,
 				A1000040100 /* ProjectImagePathResolver.swift */,
 			);
@@ -297,6 +305,7 @@
 				A2000008000 /* ProjectDetailViewModelTests.swift */,
 				A2000009000 /* AppCoordinatorNavigationTests.swift */,
 				A2000010000 /* AutoSaveDebouncerTests.swift */,
+				A2000012000 /* FileLoggerTests.swift */,
 				A2000014000 /* AutoSaveDebouncerTestSupport.swift */,
 			);
 			path = StitchCounterTests;
@@ -415,6 +424,8 @@
 				A1000040001 /* LibraryBackupManager.swift in Sources */,
 				A1000040101 /* ProjectImagePathResolver.swift in Sources */,
 				A1000040201 /* MailComposeView.swift in Sources */,
+				A1000040501 /* FileLogger.swift in Sources */,
+				A1000040601 /* LogRetentionPolicy.swift in Sources */,
 				A1000012001 /* SingleCounterViewModel.swift in Sources */,
 				A1000013001 /* DoubleCounterViewModel.swift in Sources */,
 				A1000014001 /* LibraryViewModel.swift in Sources */,
@@ -456,6 +467,7 @@
 				A2000008001 /* ProjectDetailViewModelTests.swift in Sources */,
 				A2000009001 /* AppCoordinatorNavigationTests.swift in Sources */,
 				A2000010001 /* AutoSaveDebouncerTests.swift in Sources */,
+				A2000012001 /* FileLoggerTests.swift in Sources */,
 				A2000014001 /* AutoSaveDebouncerTestSupport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
