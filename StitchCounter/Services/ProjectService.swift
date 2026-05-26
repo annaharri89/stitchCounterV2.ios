@@ -15,10 +15,12 @@ protocol ProjectServiceProtocol {
 final class ProjectService: ObservableObject, ProjectServiceProtocol {
     private let modelContainer: ModelContainer
     private let modelContext: ModelContext
+    private let logger: FileLogging
     
     @Published private(set) var projects: [Project] = []
     
-    init() {
+    init(logger: FileLogging = FileLogger.shared) {
+        self.logger = logger
         do {
             let schema = Schema([Project.self])
             let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
@@ -35,7 +37,7 @@ final class ProjectService: ObservableObject, ProjectServiceProtocol {
         do {
             projects = try modelContext.fetch(descriptor)
         } catch {
-            print("StitchCounter_ProjectService_FetchFailed: \(error)")
+            logger.error(tag: "ProjectService", message: "Failed to fetch projects", metadata: ["error": error.localizedDescription])
         }
     }
     
@@ -100,7 +102,7 @@ final class ProjectService: ObservableObject, ProjectServiceProtocol {
         do {
             try modelContext.save()
         } catch {
-            print("StitchCounter_ProjectService_SaveFailed: \(error)")
+            logger.error(tag: "ProjectService", message: "Failed to save model context", metadata: ["error": error.localizedDescription])
         }
     }
     
@@ -114,7 +116,7 @@ final class ProjectService: ObservableObject, ProjectServiceProtocol {
         do {
             try FileManager.default.createDirectory(at: projectImagesDirectory, withIntermediateDirectories: true)
         } catch {
-            print("StitchCounter_ProjectService_CreateDirectoryFailed: \(error)")
+            logger.error(tag: "ProjectService", message: "Failed to create project image directory", metadata: ["error": error.localizedDescription])
             return nil
         }
 
@@ -126,7 +128,7 @@ final class ProjectService: ObservableObject, ProjectServiceProtocol {
             try imageData.write(to: fileURL)
             return "project_images/\(fileName)"
         } catch {
-            print("StitchCounter_ProjectService_SaveImageFailed: \(error)")
+            logger.error(tag: "ProjectService", message: "Failed to save project image", metadata: ["error": error.localizedDescription])
             return nil
         }
     }
@@ -143,22 +145,28 @@ final class ProjectService: ObservableObject, ProjectServiceProtocol {
     // MARK: - Export / Import
 
     func exportLibrary() throws -> URL {
+        logger.info(tag: "ProjectService", message: "Library export started", metadata: ["projectCount": "\(projects.count)"])
         guard let documentsDirectory = documentsDirectoryURL() else {
+            logger.error(tag: "ProjectService", message: "Library export failed: documents directory unavailable", metadata: nil)
             throw LibraryBackupError.documentsDirectoryUnavailable
         }
         let appVersion =
             Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
             ?? Bundle.main.infoDictionary?["CFBundleVersion"] as? String
             ?? "1.0"
-        return try LibraryBackupManager.exportZip(
+        let exportURL = try LibraryBackupManager.exportZip(
             projects: projects,
             documentsDirectory: documentsDirectory,
             appVersion: appVersion
         )
+        logger.info(tag: "ProjectService", message: "Library export succeeded", metadata: ["path": exportURL.lastPathComponent])
+        return exportURL
     }
 
     func importLibrary(from url: URL) throws -> LibraryImportResult {
+        logger.info(tag: "ProjectService", message: "Library import started", metadata: ["path": url.lastPathComponent])
         guard let documentsDirectory = documentsDirectoryURL() else {
+            logger.error(tag: "ProjectService", message: "Library import failed: documents directory unavailable", metadata: nil)
             throw LibraryBackupError.documentsDirectoryUnavailable
         }
 
@@ -169,6 +177,7 @@ final class ProjectService: ObservableObject, ProjectServiceProtocol {
             pathExtension: url.pathExtension
         )
         guard treatAsZip else {
+            logger.warning(tag: "ProjectService", message: "Library import rejected because file is not zip", metadata: ["path": url.lastPathComponent])
             throw LibraryBackupError.notZipFile
         }
 
@@ -185,6 +194,14 @@ final class ProjectService: ObservableObject, ProjectServiceProtocol {
         }
         saveContext()
         fetchProjects()
+        logger.info(
+            tag: "ProjectService",
+            message: "Library import finished",
+            metadata: [
+                "importedCount": "\(result.importedCount)",
+                "failedCount": "\(result.failedCount)"
+            ]
+        )
         return result
     }
 }

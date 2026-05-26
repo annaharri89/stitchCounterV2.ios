@@ -8,6 +8,7 @@ final class AppCoordinator: ObservableObject {
     
     let projectService: ProjectService
     let themeService: ThemeService
+    private let logger: FileLogging
     private var cancellables = Set<AnyCancellable>()
     
     lazy var libraryViewModel: LibraryViewModel = {
@@ -18,9 +19,12 @@ final class AppCoordinator: ObservableObject {
         SettingsViewModel(themeService: themeService, projectService: projectService)
     }()
     
-    init() {
+    init(logger: FileLogging = FileLogger.shared) {
+        self.logger = logger
         self.projectService = ProjectService()
         self.themeService = ThemeService()
+        logger.initializeLogging()
+        logger.info(tag: "AppCoordinator", message: "Application coordinator initialized", metadata: nil)
         
         themeService.objectWillChange
             .sink { [weak self] _ in

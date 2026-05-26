@@ -13,10 +13,12 @@ final class ThemeService: ObservableObject {
     private let themeStorageKey = "selected_theme"
     private var pendingAlternateIconTheme: AppTheme?
     private var suppressNextAlternateIconApply = false
+    private let logger: FileLogging
 
     private static let logTag = "ThemeService"
 
-    init() {
+    init(logger: FileLogging = FileLogger.shared) {
+        self.logger = logger
         if let storedTheme = UserDefaults.standard.string(forKey: themeStorageKey),
            let theme = AppTheme(rawValue: storedTheme) {
             self.currentTheme = theme
@@ -36,10 +38,16 @@ final class ThemeService: ObservableObject {
     func setTheme(_ theme: AppTheme) {
         currentTheme = theme
         pendingAlternateIconTheme = theme
+        logger.info(
+            tag: Self.logTag,
+            message: "Theme selected",
+            metadata: ["theme": theme.rawValue]
+        )
     }
 
     func skipNextPendingAlternateIconApply() {
         suppressNextAlternateIconApply = true
+        logger.debug(tag: Self.logTag, message: "Skipping pending alternate icon apply", metadata: nil)
     }
 
     func applyPendingAlternateIconIfNeeded() {
@@ -53,17 +61,43 @@ final class ThemeService: ObservableObject {
     }
 
     private func applyAlternateIconForTheme(_ theme: AppTheme) {
+        logger.debug(
+            tag: Self.logTag,
+            message: "Applying alternate icon for theme",
+            metadata: ["theme": theme.rawValue]
+        )
         guard UIApplication.shared.supportsAlternateIcons else {
-            print("[\(Self.logTag)] event=alternate_icon_skipped reason=unsupported")
+            logger.warning(
+                tag: Self.logTag,
+                message: "Alternate icons unsupported",
+                metadata: ["theme": theme.rawValue]
+            )
             return
         }
         let name = theme.alternateIconAssetName
         if UIApplication.shared.alternateIconName == name {
+            logger.debug(
+                tag: Self.logTag,
+                message: "Alternate icon already active",
+                metadata: ["iconName": name ?? "primary"]
+            )
             return
         }
+        logger.info(
+            tag: Self.logTag,
+            message: "Setting alternate icon",
+            metadata: ["iconName": name ?? "primary"]
+        )
         UIApplication.shared.setAlternateIconName(name) { error in
             if let error {
-                print("[\(Self.logTag)] event=set_alternate_icon_failed name=\(name) error=\(error.localizedDescription)")
+                self.logger.error(
+                    tag: Self.logTag,
+                    message: "Failed to set alternate icon",
+                    metadata: [
+                        "iconName": name ?? "primary",
+                        "error": error.localizedDescription
+                    ]
+                )
             }
         }
     }

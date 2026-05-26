@@ -84,6 +84,7 @@ enum LibraryBackupError: Error, Equatable {
 
 enum LibraryBackupManager {
     private static let logTag = "LibraryBackup"
+    private static let logger: FileLogging = FileLogger.shared
 
     static func shouldTreatAsZipImport(fileData: Data, pathExtension: String) -> Bool {
         let hasZipSignature = fileData.count >= 2 && fileData[0] == 0x50 && fileData[1] == 0x4B
@@ -117,7 +118,7 @@ enum LibraryBackupManager {
             for storedPath in project.imagePaths {
                 let sourceURL = ProjectImagePathResolver.fileURL(storedPath: storedPath, documentsDirectory: documentsDirectory)
                 guard fileManager.fileExists(atPath: sourceURL.path) else {
-                    print("[\(logTag)] event=export_image_missing path=\(storedPath)")
+                    logger.warning(tag: logTag, message: "Export image missing", metadata: ["path": storedPath])
                     continue
                 }
                 let ext = sourceURL.pathExtension.isEmpty ? "jpg" : sourceURL.pathExtension
@@ -261,7 +262,7 @@ enum LibraryBackupManager {
                 for relativeImagePath in snapshot.imagePaths {
                     let source = imagesDir.appendingPathComponent(relativeImagePath).standardizedFileURL
                     guard source.isStrictSubpath(of: imagesRoot), fileManager.fileExists(atPath: source.path) else {
-                        print("[\(logTag)] event=import_image_missing path=\(relativeImagePath)")
+                        logger.warning(tag: logTag, message: "Import image missing", metadata: ["path": relativeImagePath])
                         continue
                     }
                     if let copied = copyImportedImageToDocuments(sourceFile: source, documentsDirectory: documentsDirectory) {
@@ -289,7 +290,11 @@ enum LibraryBackupManager {
                 importedCount += 1
             } catch {
                 failedNames.append("\(snapshot.title) (ID: \(snapshot.id))")
-                print("[\(logTag)] event=import_project_failed id=\(snapshot.id) title=\(snapshot.title) error=\(error)")
+                logger.error(
+                    tag: logTag,
+                    message: "Import project failed",
+                    metadata: ["id": "\(snapshot.id)", "title": snapshot.title, "error": String(describing: error)]
+                )
             }
         }
 
@@ -319,7 +324,7 @@ enum LibraryBackupManager {
             try fileManager.copyItem(at: sourceFile, to: destURL)
             return "\(internalProjectImagesDirectory)/\(destName)"
         } catch {
-            print("[\(logTag)] event=copy_import_image_failed error=\(error)")
+            logger.error(tag: logTag, message: "Copy imported image failed", metadata: ["error": String(describing: error)])
             return nil
         }
     }
